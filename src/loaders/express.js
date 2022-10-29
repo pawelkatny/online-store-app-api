@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const config = require('../config');
+const RoutesLoader = require('./routes');
 
 class ExpressLoader {
     constructor() {
@@ -14,7 +15,8 @@ class ExpressLoader {
 
 
         //routes
-
+        RoutesLoader.init(app);
+        
         //error handling
 
         //resource not found
