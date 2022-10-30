@@ -9,7 +9,7 @@ const permissionSchema = new mongoose.Schema({
 
     description: {
         type: String,
-        required: [true, 'Please provide description for new permission.'],
+        default: null,
         maxlength: 100
     },
 
