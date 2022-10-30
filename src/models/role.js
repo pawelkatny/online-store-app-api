@@ -12,3 +12,5 @@ const roleSchema = new mongoose.Schema({
         ref: "Permission"
     }]
 }, { timestamps: true });
+
+module.exports = mongoose.model('Role', roleSchema);
