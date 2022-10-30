@@ -40,7 +40,7 @@ const defaultPermissions = [
         tag: 'edit-cart'
     },
     {
-        name: 'Can edit any user(s).',
+        name: 'Can edit any role(s).',
         tag: 'edit-role'
     },
     {
@@ -59,4 +59,11 @@ const defaultPermissions = [
         name: 'Can edit any file(s).',
         tag: 'edit-file'
     },
+    {
+        name: 'Can edit any user(s).',
+        tag: 'edit-user'
+    },
+
 ]
+
+module.exports = defaultPermissions;
