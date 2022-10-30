@@ -1,4 +1,4 @@
-require('dotenv').config({ path: `${process.cwd()}/src/.env`});
+require('dotenv').config({ path: `${process.cwd()}/src/.env` });
 const path = require('path');
 const workingDir = process.cwd();
 
@@ -13,7 +13,18 @@ const config = {
         access: {
             file: 'access.log',
             interval: '1d',
-            dir: path.join(workingDir, 'logs')
+            path: path.join(workingDir, 'src', 'logs', 'access')
+        },
+        error: {
+            level: 'error',
+            filename: path.join(workingDir, 'src', 'logs', 'error', 'error.log')
+        },
+        combined: {
+            filename: path.join(workingDir, 'src', 'logs', 'error', 'combined.log')
+        },
+        console: {
+            level: "debug",
+            handleExceptions: true
         }
     },
     mongoOpts: {
