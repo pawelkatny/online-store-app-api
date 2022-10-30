@@ -1,9 +1,10 @@
 const Permission = require('../models/permission');
 const defaultPermissions = require('../config/permissions');
+const logger = require('../services/logger');
 
 class PermissionsLoader {
     static async loadDefaults() {
-        console.log('Loading default permissions to DB...');
+        logger.info('Loading default permissions to DB...');
         for (const p of defaultPermissions) {
             try {
                 let permission = await Permission.findOne({ tag: p.tag });
@@ -11,7 +12,7 @@ class PermissionsLoader {
                     permission = Permission.create({ ...p })
                 }
             } catch (error) {
-                console.log(`Error loading permission: ${p.tag}`);
+                logger.warn(`Error while creating permission in DB: ${p.name}.`);
             }
         }
     }
