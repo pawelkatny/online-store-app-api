@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const config = require('../config');
 const PermissionsLoader = require('./permissions');
+const RolesLoader = require('./roles');
 const RoutesLoader = require('./routes');
 
 class ExpressLoader {
@@ -14,7 +15,8 @@ class ExpressLoader {
 
         //default roles and permissions
         PermissionsLoader.loadDefaults();
-
+        RolesLoader.loadDefaults();
+        
         //routes
         RoutesLoader.init(app);
         
