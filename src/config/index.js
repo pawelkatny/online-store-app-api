@@ -9,6 +9,7 @@ const config = {
     absPath: workingDir,
     env: process.env.NODE_ENV || 'development',
     dbUri: process.env.MONGO_URI,
+    jwt_secret: process.env.JWT_SECRET,
     logs: {
         access: {
             file: 'access.log',
