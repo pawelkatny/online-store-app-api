@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const jwt = require('async-jsonwebtoken');
 const { jwt_secret } = require('../config');
 
 const userSchema = new mongoose.Schema({
@@ -52,12 +52,9 @@ userSchema.methods.comparePwd = async function (inputPwd) {
 } 
 
 userSchema.methods.createToken = async function() {
-    let token;
-    jwt.sign({ user_id: this._id, name: this.name }, jwt_secret, (err, token) => {
-        //to do: error handling
-        token = token;
+    const [token, err] = await jwt.sign({ userId: this._id, name: this.name }, jwt_secret, {
+        expiresIn: '1d'
     });
-
     return token;
 }
 
@@ -132,7 +129,7 @@ const Customer = User.discriminator('Customer',
                             {
                                 product: {
                                     type: mongoose.Schema.Types.ObjectId,
-                                    Account     ref: "Product"
+                                    ref: "Product"
                                 },
                                 quantity: Number
                             }
