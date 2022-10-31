@@ -108,7 +108,7 @@ const Customer = User.discriminator('Customer',
                             {
                                 product: {
                                     type: mongoose.Schema.Types.ObjectId,
-                                    ref: "Product"
+                                    Account     ref: "Product"
                                 },
                                 quantity: Number
                             }
@@ -151,3 +151,8 @@ const Customer = User.discriminator('Customer',
         discriminatorKey: 'type'
     })
 );
+
+module.exports = {
+    User,
+    Customer
+}

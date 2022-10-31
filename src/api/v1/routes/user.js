@@ -9,8 +9,8 @@ router.route('/:id').get((req, res) => {
     res.status(200).json({ msg: 'Get User'});
 });
 
-router.route('/account').get((req, res) => {
-    res.status(200).json({ msg: 'Get User Account '});
+router.route('/me').get((req, res) => {
+    res.status(200).json({ msg: 'Get Current User Account'});
 });
 
 router.route('/password').get((req, res) => {
