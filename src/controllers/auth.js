@@ -11,7 +11,10 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const { email, password } = req.body;
     const { user, token } = AuthService.login({ email, password });
+
+    res.status(StatusCodes.OK).json({ user, token });
 }
 module.exports = {
-    register
+    register,
+    login
 }
