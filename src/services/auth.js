@@ -2,7 +2,6 @@ const { User } = require('../models/user');
 const Role = require('../models/role');
 const jwt = require('async-jsonwebtoken');
 const { jwt_secret } = require('../config');
-const { decode } = require('jsonwebtoken');
 
 class AuthService {
 
