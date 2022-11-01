@@ -52,11 +52,12 @@ userSchema.methods.comparePwd = async function (inputPwd) {
 } 
 
 userSchema.methods.createToken = async function() {
-    const [token, err] = await jwt.sign({ userId: this._id, name: this.name }, jwt_secret, {
+    const [token, err] = await jwt.sign({ id: this._id, name: this.name }, jwt_secret, {
         expiresIn: '1d'
     });
     return token;
 }
+
 
 
 const User = mongoose.model('User', userSchema);
