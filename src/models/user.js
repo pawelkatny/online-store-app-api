@@ -52,9 +52,14 @@ userSchema.methods.comparePwd = async function (inputPwd) {
 } 
 
 userSchema.methods.createToken = async function() {
-    const [token, err] = await jwt.sign({ id: this._id, name: this.name }, jwt_secret, {
+    const [token, err] = await jwt.sign({ id: this._id }, jwt_secret, {
         expiresIn: '1d'
     });
+
+    if (err) {
+        throw new Error('Error while creating user token.');
+    }
+
     return token;
 }
 

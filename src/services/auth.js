@@ -16,6 +16,7 @@ class AuthService {
         }
 
         const role = await Role.findOne({ name: roleName });
+        console.log(roleName);
         user = await User.create( {email, password, name, role: role._id });
         if (user) {
             token = await user.createToken();
