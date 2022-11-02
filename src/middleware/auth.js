@@ -1,4 +1,5 @@
 const AuthService = require('../services/auth');
+const UserService = require('../services/user');
 
 const isAuthenticated = async (req, res, next) => {
     const authorization = req.headers.authorization;
@@ -11,11 +12,24 @@ const isAuthenticated = async (req, res, next) => {
     if (err) {
         throw new Error('Missing or invalid token.');
     }
-    req.user = decoded;
+    
+    const { id } = decoded;
+    const userService = new UserService(id);
+    await userService.init();
+    req.user = userService;
+    
+    return next();
+}
+
+const isAdmin = async (req, res, next) => {
+    if(req.user.hasRole('customer')) {
+        throw new Error('Unauthorized');
+    }
     
     return next();
 }
 
 module.exports = {
-    isAuthenticated
+    isAuthenticated,
+    isAdmin
 }
