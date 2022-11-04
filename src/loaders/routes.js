@@ -4,6 +4,7 @@ const adminRoutes = require('../api/v1/routes/admin');
 const userRoutes = require('../api/v1/routes/user');
 const productRoutes = require('../api/v1/routes/product');
 const orderRoutes = require('../api/v1/routes/order');
+const CustomError = require('../error/customError');
 const { api: {
     prefix
 } } = require('../config');
@@ -16,6 +17,10 @@ class RoutesLoader {
         app.use(`${prefix}/users`, userRoutes);
         app.use(`${prefix}/products`, productRoutes);
         app.use(`${prefix}/orders`, orderRoutes);
+        app.use('*', (req, res, next) => {
+            const err = new CustomError('Not found', 404);
+            next(err);
+        })
     }
 }
 

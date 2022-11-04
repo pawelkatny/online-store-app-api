@@ -7,6 +7,7 @@ const logger = require('../services/logger');
 const PermissionsLoader = require('./permissions');
 const RolesLoader = require('./roles');
 const RoutesLoader = require('./routes');
+const errorHandler = require('../error/errorHandler');
 
 class ExpressLoader {
     constructor() {
@@ -28,7 +29,7 @@ class ExpressLoader {
         RoutesLoader.init(app);
         
         //error handling
-
+        app.use(errorHandler);
         //resource not found
 
         //start server

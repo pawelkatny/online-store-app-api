@@ -13,10 +13,9 @@ const isAuthenticated = async (req, res, next) => {
         throw new Error('Missing or invalid token.');
     }
     
-
     const { id } = decoded;
     req.user = await UserService.mapUserToObj(id);
-    console.log(req.user);
+
     return next();
 }
 
