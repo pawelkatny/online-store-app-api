@@ -13,23 +13,13 @@ const isAuthenticated = async (req, res, next) => {
         throw new Error('Missing or invalid token.');
     }
     
-    const { id } = decoded;
-    const userService = new UserService(id);
-    await userService.init();
-    req.user = userService;
-    
-    return next();
-}
 
-const isAdmin = async (req, res, next) => {
-    if(req.user.hasRole('customer')) {
-        throw new Error('Unauthorized');
-    }
-    
+    const { id } = decoded;
+    req.user = await UserService.mapUserToObj(id);
+    console.log(req.user);
     return next();
 }
 
 module.exports = {
     isAuthenticated,
-    isAdmin
 }
