@@ -2,19 +2,16 @@ const role = require('../models/role');
 const { User } = require('../models/user');
 
 class UserService {
-    constructor(userId) {
-        this.userId = userId;
-    }
-
-    async init() {
-        const user = await User.findById(this.userId)
+    
+    static async mapUserToObj(userId) {
+        const user = await User.findById(userId)
         .populate({ 
             path: 'role', 
             model: 'Role',
             populate: {
                 path: 'permissions',
                 model: 'Permission',
-                select: 'tag -_id'
+                select: 'tag'
             }
         });
 
@@ -23,25 +20,37 @@ class UserService {
         }
 
         const permissionsMapped = user.role.permissions.map(p => p.tag);
-        user.permissions = permissionsMapped;
 
-        this.user = {
+        return {
             name: user.name,
-            role: role.name,
+            role: user.role.name,
             permissions: permissionsMapped,
-            email: user.email
+            email: user.email,
+            hasRole(name) {
+                return this.user.role.name === name;
+            },
+            hasPermission(name) {
+                return this.user.permissions.includes(name);
+            }
         };
+    };
 
-        console.log(this.user);
+    async deleteUserById(userId) {
+        return User.findByIdAndDelete(userId);
     }
 
-    hasRole(name) {
-        return this.user.role.name === name;
+    async getUserById(userId) {
+        return User.findById(userId);
     }
 
-    hasPermission(name) {
-        return this.user.permissions.includes(name);
+    async updateUserById(userId, update) {
+        return User.findByIdAndUpdate(userId, update);
     }
+
+    async getUsers(params) {
+        return User.find(params);
+    }
+
 }
 
 module.exports = UserService;
