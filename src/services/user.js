@@ -35,22 +35,25 @@ class UserService {
         };
     };
 
-    async deleteUserById(userId) {
+    static async deleteUserById(userId) {
         return User.findByIdAndDelete(userId);
     }
 
-    async getUserById(userId) {
+    static async getUserById(userId) {
         return User.findById(userId);
     }
 
-    async updateUserById(userId, update) {
+    static async updateUserById(userId, update) {
         return User.findByIdAndUpdate(userId, update);
     }
 
-    async getUsers(params) {
+    static async getUsers(params) {
         return User.find(params);
     }
 
+    static async createUser(userData) {
+        return User.create({ userData });
+    }
 }
 
 module.exports = UserService;
