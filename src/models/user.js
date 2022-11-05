@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-userSchema.pre('save', async function() {
+userSchema.pre('save', async function () {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
 });
@@ -49,9 +49,9 @@ userSchema.pre('save', async function() {
 userSchema.methods.comparePwd = async function (inputPwd) {
     const isMatch = await bcrypt.compare(inputPwd, this.password);
     return isMatch;
-} 
+}
 
-userSchema.methods.createToken = async function() {
+userSchema.methods.createToken = async function () {
     const [token, err] = await jwt.sign({ id: this._id }, jwt_secret, {
         expiresIn: '1d'
     });
@@ -97,60 +97,9 @@ const Customer = User.discriminator('Customer',
                     maxlength: 30
                 },
                 country: {
-                    type: String,        phone: {
-                        type: String
-                    },
-            
-                    addresses: [
-                        {
-                            name: {
-                                type: String,
-                                maxlength: 30
-                            },
-                            street: {
-                                name: {
-                                    type: String,
-                                    maxlength: 30
-                                },
-                                number: Number,
-                                localNumber: Number
-                            },
-                            zipCode: {
-                                type: String,
-                                maxlength: 30
-                            },
-                            city: {
-                                type: String,
-                                maxlength: 30
-                            },
-                            country: {
-                                type: String,
-                                maxlength: 30
-                            }
-                        }
-                    ],
-            
-                    cart: {
-                        products: [
-                            {
-                                product: {
-                                    type: mongoose.Schema.Types.ObjectId,
-                                    ref: "Product"
-                                },
-                                quantity: Number
-                            }
-                        ]
-                    },
-            
-                    favorites: [],
-            
-                    lastLoginDate: Date,
-            
-                    failedLogins: {
-                        count: Number,
-                        lastDate: Date
-                    }
-                }
+                    type: String,
+                    maxlength: 50
+                },
             }
         ],
 
@@ -166,7 +115,10 @@ const Customer = User.discriminator('Customer',
             ]
         },
 
-        favorites: [],
+        favorites: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product"
+        }],
 
         lastLoginDate: Date,
 
