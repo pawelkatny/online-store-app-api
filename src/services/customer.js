@@ -2,19 +2,19 @@ const { default: mongoose } = require('mongoose');
 const { Customer } = require('../models/user');
 
 class CustomerService {
-    static async getCustomerInfo(userId) {
+    static async getInfo(userId) {
         return Customer.findById(userId);
     }
 
-    static async getCustomerCart(userId) {
+    static async getCart(userId) {
         return Customer.findById(userId, { cart: 1 });
     }
 
-    static async updateCustomerCart(userId, cartData) {
+    static async updateCart(userId, cartData) {
         return Customer.findByIdAndUpdate(userId, { $set: cartData });
     }
 
-    static async getCustomerAddress(userId, addressId) {
+    static async getAddress(userId, addressId) {
         return Customer.findOne({
             _id: userId,
             addresses: {
@@ -23,23 +23,23 @@ class CustomerService {
         });
     }
 
-    static async getCustomerAddresses(userId) {
+    static async getAddresses(userId) {
         return Customer.findById(userId, {
             addresses: 1 
         });
     }
 
-    static async addCustomerAddress(userId, addressData) {
+    static async addAddress(userId, addressData) {
         const addressId = new mongoose.Types.ObjectId();
         return Customer.findByIdAndUpdate(userId, 
             { $push: { addresses: { ...addressData, _id: addressId }}});
     }
 
-    static async updateCustomerAddress(userId, addressId, addressData) {
+    static async updateAddress(userId, addressId, addressData) {
         return Customer.updateOne({ _id: userId, addresses: { _id: addressId } }, { $set: addressData });
     }
 
-    static async deleteCustomerAddress(userId, addressId) {
+    static async deleteAddress(userId, addressId) {
         return Customer.findByIdAndUpdate(userId, {
             $pull: {
                 addresses: {
