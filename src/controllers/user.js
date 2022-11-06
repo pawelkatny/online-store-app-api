@@ -70,7 +70,7 @@ const createUser = async (req, res) => {
     }
 
     const { name, email, roleName } = req.body;
-    const user = await UserService.createUser({ name, email, password: 'testowe_haslo' });
+    const user = await UserService.createUser({ name, email, roleName });
     if (!user) {
         throw new CustomError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
     }

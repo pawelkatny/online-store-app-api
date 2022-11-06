@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const role = require('../models/role');
 const { User, Customer } = require('../models/user');
 
@@ -61,8 +62,9 @@ class UserService {
     }
 
     static async createUser(userData) {
-        const { name, email, password } = userData;
-        return User.create({ name, email, password });
+        const password = new mongoose.Types.ObjectId();
+        const { name, email, roleName } = userData;
+        return User.create({ name, email, password, roleName });
     }
 
     static async getCustomerInfo(userId) {
@@ -87,7 +89,9 @@ class UserService {
     }
 
     static async addCustomerAddress(userId, addressData) {
-        return Customer.findById(userId).addAddress(addressData);
+        const addressId = new mongoose.Types.ObjectId();
+        return Customer.findByIdAndUpdate(userId, 
+            { $push: { addresses: { ...addressData, _id: addressId }}});
     }
 
     static async updateCustomerAddress(userId, addressId, addressData) {
