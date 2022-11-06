@@ -11,8 +11,7 @@ const getUsers = async (req, res) => {
     //build query object
     const queryObject = {};
 
-    const users = await UserService.getUsers(queryObject, { password: 0 })
-        .populate({ path: 'role', select: 'name -_id' });
+    const users = await UserService.getUsers(queryObject);
     
     res.status(StatusCodes.OK).json({ users });
 }
@@ -24,7 +23,7 @@ const getUser = async (req, res) => {
     }
     const { id } = req.params;
 
-    const user = await UserService.getUserById(id, { password: 0 });
+    const user = await UserService.getUserById(id);
     if (!user) {
         throw new CustomError('Not found', StatusCodes.NOT_FOUND);
     }
@@ -46,7 +45,7 @@ const updateUser = async (req, res) => {
         throw new CustomError('Not modified', StatusCodes.NOT_MODIFIED);
     }
 
-    res.status(StatusCodes.OK).json({ user });
+    res.status(StatusCodes.OK).send();
 }
 
 const deleteUser = async (req, res) => {
@@ -71,10 +70,18 @@ const createUser = async (req, res) => {
     }
 
     const { name, email, roleName } = req.body;
-    const user = await UserService.createUser({ name, email, roleName });
+    const user = await UserService.createUser({ name, email, password: 'testowe_haslo' });
     if (!user) {
         throw new CustomError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
-    res.status(StatusCodes.CREATED).json({ user }, { name: 1, email: 1, _id: 1 });
-} 
+    res.status(StatusCodes.CREATED).json({ user });
+}
+
+module.exports = {
+    getUsers,
+    getUser,
+    updateUser,
+    deleteUser,
+    createUser
+}
