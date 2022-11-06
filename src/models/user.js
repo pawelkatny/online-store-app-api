@@ -9,8 +9,6 @@ const userSchema = new mongoose.Schema({
         ref: 'Role'
     },
 
-    permissions: [String],
-
     email: {
         type: String,
         match: [
@@ -63,73 +61,72 @@ userSchema.methods.createToken = async function () {
     return token;
 }
 
-
-
 const User = mongoose.model('User', userSchema);
 
-const Customer = User.discriminator('Customer',
-    new mongoose.Schema({
-        phone: {
-            type: String,
-            maxlength: 20
-        },
+const customerSchema = new mongoose.Schema({
+    phone: {
+        type: String,
+        maxlength: 20
+    },
 
-        addresses: [
-            {
+    addresses: [
+        {
+            _id: String,
+            name: {
+                type: String,
+                maxlength: 30
+            },
+            street: {
                 name: {
                     type: String,
                     maxlength: 30
                 },
-                street: {
-                    name: {
-                        type: String,
-                        maxlength: 30
-                    },
-                    number: Number,
-                    localNumber: Number
-                },
-                zipCode: {
-                    type: String,
-                    maxlength: 30
-                },
-                city: {
-                    type: String,
-                    maxlength: 30
-                },
-                country: {
-                    type: String,
-                    maxlength: 50
-                },
-            }
-        ],
-
-        cart: {
-            products: [
-                {
-                    product: {
-                        type: mongoose.Schema.Types.ObjectId,
-                        ref: "Product"
-                    },
-                    quantity: Number
-                }
-            ]
-        },
-
-        favorites: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Product"
-        }],
-
-        lastLoginDate: Date,
-
-        failedLogins: {
-            count: Number,
-            lastDate: Date
+                number: Number,
+                localNumber: Number
+            },
+            zipCode: {
+                type: String,
+                maxlength: 30
+            },
+            city: {
+                type: String,
+                maxlength: 30
+            },
+            country: {
+                type: String,
+                maxlength: 50
+            },
         }
-    }, {
-        discriminatorKey: 'type'
-    })
-);
+    ],
+
+    cart: {
+        products: [
+            {
+                product: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Product"
+                },
+                quantity: Number
+            }
+        ]
+    },
+
+    favorites: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product"
+    }],
+
+    lastLoginDate: Date,
+
+    failedLogins: {
+        count: Number,
+        lastDate: Date
+    }
+}, {
+    discriminatorKey: 'type'
+});
+
+const Customer = User.discriminator('Customer', customerSchema);
 
 module.exports = {
     User,
