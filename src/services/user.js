@@ -88,6 +88,12 @@ class UserService {
         });
     }
 
+    static async getCustomerAddresses(userId) {
+        return Customer.findById(userId, {
+            addresses: 1 
+        });
+    }
+
     static async addCustomerAddress(userId, addressData) {
         const addressId = new mongoose.Types.ObjectId();
         return Customer.findByIdAndUpdate(userId, 
