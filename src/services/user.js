@@ -27,10 +27,10 @@ class UserService {
             permissions: permissionsMapped,
             email: user.email,
             hasRole(name) {
-                return this.user.role.name === name;
+                return this.role.name === name;
             },
             hasPermission(name) {
-                return this.user.permissions.includes(name);
+                return this.permissions.includes(name);
             }
         };
     };
@@ -40,19 +40,29 @@ class UserService {
     }
 
     static async getUserById(userId) {
-        return User.findById(userId);
+        return User.findById(userId, { password: 0 }).populate({
+            path: 'role',
+            model: 'Role',
+            select: '-_id',
+            populate: {
+                path: 'permissions',
+                model: 'Permission',
+                select: 'name tag -_id'
+            }
+        });
     }
 
     static async updateUserById(userId, update) {
-        return User.findByIdAndUpdate(userId, update);
+        return User.findByIdAndUpdate(userId, { $set: update });
     }
 
     static async getUsers(params) {
-        return User.find(params);
+        return User.find({}, { password: 0 }).populate({ path: 'role', select: 'name -_id' });;
     }
 
     static async createUser(userData) {
-        return User.create({ userData });
+        const { name, email, password } = userData;
+        return User.create({ name, email, password });
     }
 
     static async getCustomerInfo(userId) {
