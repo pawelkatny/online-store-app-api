@@ -3,14 +3,16 @@ const router = Router();
 const { isAuthenticated } = require('../../../middleware/auth');
 const userCtr = require('../../../controllers/user');
 
+router.use(isAuthenticated);
+
 router.route('/')
-    .get(isAuthenticated, userCtr.getUsers)
-    .post(isAuthenticated, userCtr.createUser);
+    .get(userCtr.getUsers)
+    .post(userCtr.createUser);
 
 router.route('/:id')
-    .get(isAuthenticated, userCtr.getUser)
-    .patch(isAuthenticated, userCtr.updateUser)
-    .delete(isAuthenticated, userCtr.deleteUser)
+    .get(userCtr.getUser)
+    .patch(userCtr.updateUser)
+    .delete(userCtr.deleteUser)
 
 router.route('/me').get((req, res) => {
     res.status(200).json({ msg: 'Get Current User Account' });
