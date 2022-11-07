@@ -1,5 +1,7 @@
 const AuthService = require('../services/auth');
 const UserService = require('../services/user');
+const CustomError = require('../error/customError');
+const { StatusCodes } = require('http-status-codes');
 
 const isAuthenticated = async (req, res, next) => {
     const authorization = req.headers.authorization;
@@ -16,9 +18,20 @@ const isAuthenticated = async (req, res, next) => {
     const { id } = decoded;
     req.user = await UserService.mapUserToObj(id);
 
+
     return next();
+}
+
+const isCustomer = async (req, res, next) => {
+    const currentUser = req.user;
+    if (!currentUser.hasRole('customer')) {
+        throw new CustomError('Unathorized', StatusCodes.UNAUTHORIZED);
+    }
+
+    next();
 }
 
 module.exports = {
     isAuthenticated,
+    isCustomer
 }

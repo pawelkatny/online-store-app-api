@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const router = Router();
+const meRoutes = require('./customer');
 const { isAuthenticated } = require('../../../middleware/auth');
 const userCtr = require('../../../controllers/user');
 
@@ -14,19 +15,6 @@ router.route('/:id')
     .patch(userCtr.updateUser)
     .delete(userCtr.deleteUser)
 
-router.route('/me').get((req, res) => {
-    res.status(200).json({ msg: 'Get Current User Account' });
-});
-
-router.route('/me/addresses')
-    .get(userCtr.getCustomerAddresses)
-    .post(userCtr.addCustomerAddress);
-
-router.route('/me/addresses/:id')
-    .get(userCtr.getCustomerAddress)
-    .patch(userCtr.updateCustomerAddress)
-    .delete(userCtr.deleteCustomerAddress)
-
 router.route('/password').get((req, res) => {
     res.status(200).json({ msg: 'User Pwd ' });
 });
@@ -34,5 +22,7 @@ router.route('/password').get((req, res) => {
 router.route('/password/reset').get((req, res) => {
     res.status(200).json({ msg: 'User pwd reset ' });
 });
+
+router.use('/me', meRoutes);
 
 module.exports = router;

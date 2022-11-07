@@ -5,7 +5,7 @@ const { getReasonPhrase } = require('http-status-codes');
 const errorHandler = ((err, req, res, next) => {
     let statusCode = 500;
     logger.error(err.message);
-
+    console.log(err);
     if (err instanceof CustomError) {
         statusCode = err.statusCode;
     }

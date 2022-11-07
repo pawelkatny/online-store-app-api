@@ -1,5 +1,6 @@
 const CustomError = require('../error/customError');
 const UserService = require('../services/user');
+const CustomerService = require('../services/customer');
 const { StatusCodes } = require('http-status-codes');
 
 const getUsers = async (req, res) => {
