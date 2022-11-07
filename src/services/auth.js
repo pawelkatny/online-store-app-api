@@ -1,4 +1,6 @@
-const { User } = require('../models/user');
+const { Customer, User } = require('../models/user');
+const CustomError = require('../error/customError');
+const { StatusCodes } = require('http-status-codes');
 const Role = require('../models/role');
 const jwt = require('async-jsonwebtoken');
 const { jwt_secret } = require('../config');
@@ -7,17 +9,17 @@ class AuthService {
 
     static async register(userData) {
 
-        const { email, name, password, roleName } = userData;
+        const { email, name, password } = userData;
 
         let token;
-        let user = await User.findOne({ email: email });
+        let user = await Customer.findOne({ email: email });
         if (user) {
-            throw Error('User already exists');
+            throw new CustomError('Conflict', StatusCodes.CONFLICT);
         }
 
-        const role = await Role.findOne({ name: roleName });
+        const role = await Role.findOne({ name: 'customer' });
 
-        user = await User.create( {email, password, name, role: role._id });
+        user = await Customer.create( {email, password, name, role: role._id });
         if (user) {
             token = await user.createToken();
         }
@@ -30,11 +32,12 @@ class AuthService {
 
         const user = await User.findOne( { email: email });
         if (!user) {
-            throw Error('Incorrect user or password.');
+            throw new CustomError('Unathorized', StatusCodes.UNAUTHORIZED);
         }
+
         const pwdMatch = await user.comparePwd(password);
         if (!pwdMatch) {
-            throw Error('Incorrect user or password.');
+            throw new CustomError('Unathorized', StatusCodes.UNAUTHORIZED);
         }
 
         const token = await user.createToken();

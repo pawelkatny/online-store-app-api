@@ -23,12 +23,13 @@ class UserService {
         const permissionsMapped = user.role.permissions.map(p => p.tag);
 
         return {
+            id: userId,
             name: user.name,
             role: user.role.name,
             permissions: permissionsMapped,
             email: user.email,
             hasRole(name) {
-                return this.role.name === name;
+                return this.role === name;
             },
             hasPermission(name) {
                 return this.permissions.includes(name);
@@ -65,6 +66,10 @@ class UserService {
         const password = new mongoose.Types.ObjectId();
         const { name, email, roleName } = userData;
         return User.create({ name, email, password, roleName });
+    }
+
+    static async getMe(userId) {
+        return User.findById(userId);
     }
 }
 
