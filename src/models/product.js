@@ -17,7 +17,8 @@ const productSchema = new mongoose.Schema({
     }],
     tags: [String],
     images: [String],
-    quantity: Number
+    quantity: Number,
+    price: Number
 });
 
 const Product = mongoose.model('Product', productSchema);
