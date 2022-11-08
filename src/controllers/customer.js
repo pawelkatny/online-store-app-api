@@ -99,7 +99,7 @@ const deleteAddress = async (req, res) => {
 
 const addProductToFav = async (req, res) => {
     const currentUser = req.user;
-    const { productId } = req.params;
+    const { productId } = req.body;
     const favProduct = await CustomerService.addProductToFav(currentUser.id, productId);
     if (!favProduct) {
         throw new CustomError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
@@ -119,7 +119,7 @@ const removeProductFromFav = async (req, res) => {
     res.status(StatusCodes.OK).send();
 }
 
-const showFavProducts = async (req, res) => {
+const getFavProducts = async (req, res) => {
     const currentUser = req.user;
     const favProducts = await CustomerService.showFavProducts(currentUser.id);
 
@@ -137,5 +137,5 @@ module.exports = {
     deleteAddress,
     addProductToFav,
     removeProductFromFav,
-    showFavProducts
+    getFavProducts
 }
