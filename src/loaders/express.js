@@ -22,6 +22,7 @@ class ExpressLoader {
             path: config.logs.access.path
         })}));
 
+
         //default roles and permissions
         PermissionsLoader.loadDefaults();
         RolesLoader.loadDefaults();

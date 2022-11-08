@@ -14,5 +14,4 @@ router.route('/addresses/:addressId')
     .patch(customerCtr.updateAddress)
     .delete(customerCtr.deleteAddress)
 
-
 module.exports = router;

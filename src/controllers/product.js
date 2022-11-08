@@ -13,9 +13,9 @@ const getProducts = async (req, res) => {
 }
 
 const getProduct = async (req, res) => {
-    const { id } = req.params;
+    const { productId } = req.params;
 
-    const product = await ProductService.getProduct(id);
+    const product = await ProductService.getProduct(productId);
     if (!product) {
         throw new CustomError('Not found', StatusCodes.NOT_FOUND);
     }
@@ -52,23 +52,15 @@ const createProduct = async (req, res) => {
 }
 
 const updateProduct = async (req, res) => {
+    const currentUser = req.user;
+    if (!currentUser || !currentUser.hasPermission('edit-product')) {
+        throw new CustomError('Unauthorized', StatusCodes.UNAUTHORIZED);
+    }
     const { productId } = req.params;
-    const { 
-        name, 
-        description, 
-        additionalInfo,
-        tags, 
-        quantity, 
-        price } = req.body;
+    const {
+        productData } = req.body;
 
-    const product = await ProductService(productId, {
-        name, 
-        description, 
-        additionalInfo,
-        tags, 
-        quantity, 
-        price
-    });
+    const product = await ProductService.updateProduct(productId, { ...productData });
 
     if (!product) {
         throw new CustomError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
@@ -78,6 +70,10 @@ const updateProduct = async (req, res) => {
 }
 
 const deleteProduct = async (req, res) => {
+    const currentUser = req.user;
+    if (!currentUser || !currentUser.hasPermission('edit-product')) {
+        throw new CustomError('Unauthorized', StatusCodes.UNAUTHORIZED);
+    }
     const { productId } = req.params;
 
     const product = await ProductService.deleteProduct(productId);
@@ -86,4 +82,12 @@ const deleteProduct = async (req, res) => {
     }
 
     res.status(StatusCodes.OK).send();
+}
+
+module.exports = {
+    getProducts,
+    getProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct
 }
