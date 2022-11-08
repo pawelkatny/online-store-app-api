@@ -15,7 +15,6 @@ class CustomerService {
     }
 
     static async getAddress(userId, addressId) {
-        console.log(addressId)
         return Customer.findOne({
             _id: userId,
             "addresses._id": addressId
@@ -67,6 +66,18 @@ class CustomerService {
                 }
             }
         });
+    }
+
+    static async addProductToFav(userId, productId) {
+        return Customer.findByIdAndUpdate(userId, { $push: { favorites: productId }});
+    }
+
+    static async removeProductFromFav(userId, productId) {
+        return Customer.findByIdAndUpdate(userId, { $pull: { favorites: productId }});
+    }
+
+    static async showFavProducts(userId) {  
+        return Customer.findById(userId, { favorites: 1, _id: 0 });
     }
 }
 
