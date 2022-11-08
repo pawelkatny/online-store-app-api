@@ -14,4 +14,11 @@ router.route('/addresses/:addressId')
     .patch(customerCtr.updateAddress)
     .delete(customerCtr.deleteAddress)
 
+router.route('/favorites')
+    .get(customerCtr.getFavProducts)
+    .post(customerCtr.addProductToFav);
+
+router.route('/favorites/:productId')
+    .delete(customerCtr.removeProductFromFav);
+
 module.exports = router;
