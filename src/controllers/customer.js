@@ -97,6 +97,35 @@ const deleteAddress = async (req, res) => {
     res.status(StatusCodes.OK).send();
 }
 
+const addProductToFav = async (req, res) => {
+    const currentUser = req.user;
+    const { productId } = req.params;
+    const favProduct = await CustomerService.addProductToFav(currentUser.id, productId);
+    if (!favProduct) {
+        throw new CustomError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+
+    res.status(StatusCodes.CREATED).send();
+}
+
+const removeProductFromFav = async (req, res) => {
+    const currentUser = req.user;
+    const { productId } = req.params;
+    const favProduct = await CustomerService.removeProductFromFav(currentUser.id, productId);
+    if (!favProduct) {
+        throw new CustomError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+
+    res.status(StatusCodes.OK).send();
+}
+
+const showFavProducts = async (req, res) => {
+    const currentUser = req.user;
+    const favProducts = await CustomerService.showFavProducts(currentUser.id);
+
+    res.status(StatusCodes.OK).json({ favProducts });
+}
+
 module.exports = {
     getInfo,
     getCart,
@@ -106,4 +135,7 @@ module.exports = {
     addAddress,
     updateAddress,
     deleteAddress,
+    addProductToFav,
+    removeProductFromFav,
+    showFavProducts
 }
