@@ -1,6 +1,7 @@
 const CustomError = require('../error/customError');
 const CustomerService = require('../services/customer');
 const { StatusCodes } = require('http-status-codes');
+const { restart } = require('nodemon');
 
 const getInfo = async (req, res) => {
     const currentUser = req.user;
@@ -22,15 +23,47 @@ const getCart = async (req, res) => {
     res.status(StatusCodes.OK).json({ cart });
 }
 
-const updateCart = async (req, res) => {
+const updateProductCart = async (req, res) => {
     const currentUser = req.user;
-    const cartData = req.body;
-    const cart = await CustomerService.updateCart(currentUser.id, cartData);
+    const update = req.body;
+    const cart = await CustomerService.updateProductCartQty(currentUser.id, update);
     if (!cart) {
         throw new CustomError('Not found', StatusCodes.NOT_FOUND);
     }
 
     res.status(StatusCodes.OK).json({ cart });
+}
+
+const addToCart = async (req, res) => {
+    const currentUser = req.user;
+    const { productId } = req.body;
+    const cart = await CustomerService.addProductToCart(currentUser.id, productId);
+    if (!cart) {
+        throw new CustomError('Something went wrong', StatusCodes.NOT_FOUND);
+    }
+
+    res.status(StatusCodes.CREATED).send();
+}
+
+const removeFromCart = async (req, res) => {
+    const currentUser = req.user;
+    const { productId } = req.params;
+    const cart = await CustomerService.removeFromCart(productId);
+    if (!cart) {
+        throw new CustomError('Something went wrong', StatusCodes.NOT_FOUND);
+    }
+
+    res.status(StatusCodes.OK).send();
+}
+
+const clearCart = async (req, res) => {
+    const currentUser = req.user;
+    const cart = await CustomerService.clearCart(currentUser.id);
+    if (!cart) {
+        throw new CustomError('Something went wrong', StatusCodes.NOT_FOUND);
+    }
+
+    res.status(StatusCodes.OK).send();
 }
 
 const getAddress = async (req, res) => {
@@ -129,7 +162,10 @@ const getFavProducts = async (req, res) => {
 module.exports = {
     getInfo,
     getCart,
-    updateCart,
+    updateProductCart,
+    addToCart,
+    removeFromCart,
+    clearCart,
     getAddress,
     getAddresses,
     addAddress,
