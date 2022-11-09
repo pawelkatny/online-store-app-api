@@ -8,7 +8,7 @@ class CustomerService {
     }
 
     static async getCart(userId) {
-        return Customer.findById(userId, { cart: 1 });
+        return Customer.findById(userId, { cart: 1, _id: 0 });
     }
 
     static async addProductToCart(userId, productId) {
@@ -16,11 +16,11 @@ class CustomerService {
         const user = await Customer.findById(userId, { cart: 1});
         const cart = user.cart;
 
-        const cartProductIndex = cart.indexOf(p => p.product == productId);
+        const cartProductIndex = cart.products.indexOf(p => p.product == productId);
         if (cartProductIndex >= 0) {
-            cart[cartProductIndex].quantity += 1;
+            cart.products[cartProductIndex].quantity += 1;
         } else {
-            cart.push({
+            cart.products.push({
                 name: product.name,
                 product: product._id,
                 price: product.price,
