@@ -69,7 +69,7 @@ class CustomerService {
     }
 
     static async addProductToFav(userId, productId) {
-        return Customer.findByIdAndUpdate(userId, { $push: { favorites: productId }});
+        return Customer.findByIdAndUpdate(userId, { $addToSet: { favorites: productId }});
     }
 
     static async removeProductFromFav(userId, productId) {
