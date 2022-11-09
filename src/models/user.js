@@ -102,13 +102,16 @@ const customerSchema = new mongoose.Schema({
     cart: {
         products: [
             {
+                name: String,
                 product: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Product"
                 },
+                price: Number,
                 quantity: Number
             }
-        ]
+        ],
+        total: Number
     },
 
     favorites: [{
