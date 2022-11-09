@@ -77,7 +77,16 @@ class CustomerService {
     }
 
     static async showFavProducts(userId) {  
-        return Customer.findById(userId, { favorites: 1, _id: 0 });
+        return Customer.findById(userId, { favorites: 1, _id: 0 })
+        .populate({ 
+            path: 'favorites',
+            select: {
+                name: 1,
+                images: 1,
+                price: 1,
+                quantity: 1
+            }
+        });
     }
 }
 
