@@ -21,4 +21,13 @@ router.route('/favorites')
 router.route('/favorites/:productId')
     .delete(customerCtr.removeProductFromFav);
 
+router.route('/cart')
+    .get(customerCtr.getCart)
+    .post(customerCtr.addToCart)
+    .delete(customerCtr.clearCart);
+
+router.route('/product')
+.patch(customerCtr.updateProductCart)
+.delete(customerCtr.removeFromCart);
+
 module.exports = router;
