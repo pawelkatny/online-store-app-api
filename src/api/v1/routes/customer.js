@@ -30,4 +30,7 @@ router.route('/cart/product/:productId')
     .patch(customerCtr.updateProductCart)
     .delete(customerCtr.removeFromCart);
 
+router.route('/checkout')
+    .get(customerCtr.checkout);
+
 module.exports = router;

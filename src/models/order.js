@@ -59,8 +59,7 @@ const orderSchema = new mongoose.Schema({
         country: {
             type: String,
             maxlength: 50
-        },
-        required: true
+        }
     },
     products: [
         {

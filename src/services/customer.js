@@ -141,14 +141,14 @@ class CustomerService {
 
     static async checkout(userId) {
         let isCartEmpty = false;
-        const user = await Customer.findById(userId, { cart: 1, addrresses: 1 });
+        const user = await Customer.findById(userId, { cart: 1, addresses: 1 });
         const shipMethods = Order.schema.path('delivery').enumValues;
         
         if (!user || user.cart.products.length == 0) {
-            isCartEmpty = true,
+            isCartEmpty = true;
         }
 
-        return checkout = {
+        return {
             isEmpty: isCartEmpty,
             products: user.cart.products,
             total: user.cart.total,
