@@ -31,14 +31,13 @@ class CustomerService {
         return customer.save();
     }
 
-    static async updateProductCartQty(userId, update) {
-        const { qty, productId } = update;
+    static async updateProductCartQty(userId, productId, qty) {
         const customer = await Customer.findById(userId, { cart: 1});
         const cart = customer.cart;
 
-        const cartProductIndex = cart.indexOf(p => p.product == productId);
+        const cartProductIndex = cart.products.findIndex(p => p.product == productId);
         if (cartProductIndex >= 0 && qty > 0) {
-            cart[cartProductIndex].quantity = qty;
+            cart.products[cartProductIndex].quantity = qty;
         } 
         await customer.updateCartTotal();
 
