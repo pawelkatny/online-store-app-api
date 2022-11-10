@@ -13,10 +13,9 @@ class CustomerService {
 
     static async addProductToCart(userId, productId) {
         const product = await Product.findById(productId);
-        const user = await Customer.findById(userId, { cart: 1});
-        const cart = user.cart;
-
-        const cartProductIndex = cart.products.indexOf(p => p.product == productId);
+        const customer = await Customer.findById(userId, { cart: 1});
+        const cart = customer.cart;
+        const cartProductIndex = cart.products.findIndex(p => p.product.toString() == productId);
         if (cartProductIndex >= 0) {
             cart.products[cartProductIndex].quantity += 1;
         } else {
@@ -27,35 +26,37 @@ class CustomerService {
                 quantity: 1
             });
         }
-
-        return user.save();
+        await customer.updateCartTotal();
+        
+        return customer.save();
     }
 
     static async updateProductCartQty(userId, update) {
         const { qty, productId } = update;
-        const user = await Customer.findById(userId, { cart: 1});
-        const cart = user.cart;
-        
+        const customer = await Customer.findById(userId, { cart: 1});
+        const cart = customer.cart;
+
         const cartProductIndex = cart.indexOf(p => p.product == productId);
         if (cartProductIndex >= 0 && qty > 0) {
             cart[cartProductIndex].quantity = qty;
         } 
+        await customer.updateCartTotal();
 
-        return user.save();
+        return customer.save();
     }
 
     static async removeProductFromCart(userId, productId) {
-        return User.findByIdAndUpdate(userId, {
-            $pull: {
-                cart: {
-                    product: productId
-                }
-            }
-        });
+        const customer = await Customer.findById(userId, { cart: 1});
+        const cart = customer.cart;
+        const updatedCartProducts = cart.products.filter(p => p.product != productId);
+        cart.products = updatedCartProducts;
+        await customer.updateCartTotal();
+
+        return customer.save();
     }
 
     static async clearCart(userId) {
-        return User.findByIdAndUpdate(userId, {
+        return Customer.findByIdAndUpdate(userId, {
             $set: { cart: {
                 products: [],
                 tota: 0

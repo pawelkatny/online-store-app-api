@@ -132,6 +132,12 @@ const customerSchema = new mongoose.Schema({
     discriminatorKey: 'type'
 });
 
+customerSchema.methods.updateCartTotal = async function (inputPwd) {
+    const cartProducts = this.cart.products;
+    const cartTotal = cartProducts.reduce((a, b) => a + (b.quantity * b.price), 0);
+    this.cart.total = cartTotal;
+}
+
 const Customer = User.discriminator('Customer', customerSchema);
 
 module.exports = {
