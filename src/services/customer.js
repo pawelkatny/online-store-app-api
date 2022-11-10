@@ -1,6 +1,7 @@
 const { default: mongoose } = require('mongoose');
 const { Customer } = require('../models/user');
 const Product = require('../models/product');
+const Order = require('../models/order');
 
 class CustomerService {
     static async getInfo(userId) {
@@ -136,6 +137,18 @@ class CustomerService {
                 quantity: 1
             }
         });
+    }
+
+    static async checkout(userId) {
+        const user = await Customer.findById(userId, { cart: 1, addrresses: 1 });
+        const shipMethods = Order.schema.path('delivery').enumValues;
+
+        return checkout = {
+            products: user.cart.products,
+            total: user.cart.total,
+            addresses: user.addresses,
+            shipMethods: shipMethods
+        }
     }
 }
 
