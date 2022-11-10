@@ -160,6 +160,16 @@ const getFavProducts = async (req, res) => {
     res.status(StatusCodes.OK).json({ favProducts });
 }
 
+const checkout = async (req, res) => {
+    const currentUser = req.user;
+    const checkout = await CustomerService.checkout(currentUser.id);
+
+    if (checkout.isEmpty) {
+        throw new CustomError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+
+    res.status(StatusCodes.OK).json({ checkout });
+}
 module.exports = {
     getInfo,
     getCart,

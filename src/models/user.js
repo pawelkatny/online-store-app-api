@@ -132,7 +132,7 @@ const customerSchema = new mongoose.Schema({
     discriminatorKey: 'type'
 });
 
-customerSchema.methods.updateCartTotal = async function (inputPwd) {
+customerSchema.methods.updateCartTotal = async function () {
     const cartProducts = this.cart.products;
     const cartTotal = cartProducts.reduce((a, b) => a + (b.quantity * b.price), 0);
     this.cart.total = cartTotal;
