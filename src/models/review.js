@@ -6,10 +6,9 @@ const reviewSchema = new mongoose.Schema({
             type: String,
             required: true
         },
-        user: {
+        customer: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Customer",
-            required: true
         }
     },
     product: {
