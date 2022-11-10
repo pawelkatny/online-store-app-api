@@ -184,5 +184,6 @@ module.exports = {
     deleteAddress,
     addProductToFav,
     removeProductFromFav,
-    getFavProducts
+    getFavProducts,
+    checkout
 }
