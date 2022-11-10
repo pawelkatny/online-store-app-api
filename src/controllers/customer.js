@@ -25,8 +25,9 @@ const getCart = async (req, res) => {
 
 const updateProductCart = async (req, res) => {
     const currentUser = req.user;
-    const update = req.body;
-    const cart = await CustomerService.updateProductCartQty(currentUser.id, update);
+    const { productId } = req.params;
+    const { qty } = req.body;
+    const cart = await CustomerService.updateProductCartQty(currentUser.id, productId, qty);
     if (!cart) {
         throw new CustomError('Not found', StatusCodes.NOT_FOUND);
     }
@@ -48,7 +49,7 @@ const addToCart = async (req, res) => {
 const removeFromCart = async (req, res) => {
     const currentUser = req.user;
     const { productId } = req.params;
-    const cart = await CustomerService.removeFromCart(productId);
+    const cart = await CustomerService.removeProductFromCart(currentUser.id, productId);
     if (!cart) {
         throw new CustomError('Something went wrong', StatusCodes.NOT_FOUND);
     }

@@ -26,8 +26,8 @@ router.route('/cart')
     .post(customerCtr.addToCart)
     .delete(customerCtr.clearCart);
 
-router.route('/product')
-.patch(customerCtr.updateProductCart)
-.delete(customerCtr.removeFromCart);
+router.route('/cart/product/:productId')
+    .patch(customerCtr.updateProductCart)
+    .delete(customerCtr.removeFromCart);
 
 module.exports = router;
