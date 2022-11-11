@@ -73,6 +73,13 @@ class ProductService {
             rating: 1
         });
     }
+
+    static async getReview(productId, userId) {
+        return Review.findOne({
+            product: productId,
+            'reviewer.customer': userId
+        });
+    }
 }
 
 module.exports = ProductService;
