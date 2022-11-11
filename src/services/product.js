@@ -1,7 +1,6 @@
 const Product = require('../models/product');
 const Review = require('../models/review');
 const { Customer } = require('../models/user');
-const CustomError = require('../error/customError');
 
 class ProductService {
     static async getProducts(params) {
@@ -45,6 +44,7 @@ class ProductService {
         const customer = await Customer.findById(customerId); 
         const product = await Product.findById(productId);
 
+        
         const newReview = {
             reviewer: {
                 name: customer.name.first,
@@ -55,7 +55,7 @@ class ProductService {
             rating: rating
         };
 
-        const review = Review.create(review);
+        const review = Review.create({ ...newReview });
         
         product.reviews.push({
             rating: rating,
@@ -64,7 +64,15 @@ class ProductService {
         product.updateRating();
 
         return product.save();
-    } 
+    }
+    
+    static async getReviews(productId) {
+        return Review.find({ product: productId }, { 
+            'reviewer.name': 1,
+            summary: 1,
+            rating: 1
+        });
+    }
 }
 
 module.exports = ProductService;

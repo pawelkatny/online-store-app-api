@@ -84,10 +84,31 @@ const deleteProduct = async (req, res) => {
     res.status(StatusCodes.OK).send();
 }
 
+const getReviews = async (req, res) => {
+    const { productId } = req.params;
+    const reviews = await ProductService.getReviews(productId);
+
+    res.status(StatusCodes.OK).json({ reviews });
+}
+
+const addReview = async (req, res) => {
+    const currentUser = req.user;
+    const { productId } = req.params;
+    const { rating, summary } = req.body;
+    const product = await ProductService.addReview(productId, currentUser.id, { rating, summary });
+    if (!product) {
+        throw new CustomError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+
+    res.status(StatusCodes.CREATED).json({ product });
+}
+
 module.exports = {
     getProducts,
     getProduct,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getReviews,
+    addReview
 }

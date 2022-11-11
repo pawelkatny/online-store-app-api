@@ -12,4 +12,7 @@ router.route('/:productId')
     .patch(isAuthenticated, productCtr.updateProduct)
     .delete(isAuthenticated, productCtr.deleteProduct);
 
+router.route('/:productId/reviews')
+    .get(productCtr.getReviews)
+    .post(isAuthenticated, productCtr.addReview);
 module.exports = router;
