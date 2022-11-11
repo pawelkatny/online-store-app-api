@@ -25,10 +25,22 @@ const productSchema = new mongoose.Schema({
         default: null
     },
     reviews: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Review"
+        rating: Number,
+        review: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Review"
+        }
     }]
 });
+
+productSchema.methods.updateRating = async function () {
+    const reviews = this.reviews;
+    const sumRating = reviews.reduce((a, b) => {
+        return a + b.rating;
+    }, 0);
+
+    this.rating = Number.parseFloat(sumRating/reviews.length).toFixed(1);
+}
 
 const Product = mongoose.model('Product', productSchema);
 

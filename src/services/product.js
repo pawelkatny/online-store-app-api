@@ -43,8 +43,9 @@ class ProductService {
     static async addReview(productId, customerId, reviewData) {
         const { rating, summary } = reviewData;
         const customer = await Customer.findById(customerId); 
+        const product = await Product.findById(productId);
 
-        const review = {
+        const newReview = {
             reviewer: {
                 name: customer.name.first,
                 customer: customerId
@@ -54,7 +55,15 @@ class ProductService {
             rating: rating
         };
 
-        return Review.create(review);
+        const review = Review.create(review);
+        
+        product.reviews.push({
+            rating: rating,
+            review: review._id
+        });
+        product.updateRating();
+
+        return product.save();
     } 
 }
 
