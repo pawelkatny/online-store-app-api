@@ -94,6 +94,10 @@ const getReviews = async (req, res) => {
 const addReview = async (req, res) => {
     const currentUser = req.user;
     const { productId } = req.params;
+    const review = await ProductService.getReview(productId, currentUser.id);
+    if(review) {
+        throw new CustomError('Review already exists', StatusCodes.CONFLICT);
+    }
     const { rating, summary } = req.body;
     const product = await ProductService.addReview(productId, currentUser.id, { rating, summary });
     if (!product) {
