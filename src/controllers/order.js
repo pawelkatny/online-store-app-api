@@ -4,8 +4,11 @@ const CustomerService = require('../services/customer');
 const { StatusCodes } = require('http-status-codes');
 
 const getOrders = async (req, res) => {
+    const currentUser = req.user;
+    if (!currentUser.hasPermission('view-order')) {
+        throw new CustomError('Unauthorized', StatusCodes.UNAUTHORIZED);
+    }
     const { query } = req;
-
     const queryObject = {};
     const orders = await OrderService.getOrders(queryObject);
 
@@ -13,6 +16,10 @@ const getOrders = async (req, res) => {
 }
 
 const getOrder = async (req, res) => {
+    const currentUser = req.user;
+    if (!currentUser.hasPermission('view-order')) {
+        throw new CustomError('Unauthorized', StatusCodes.UNAUTHORIZED);
+    }
     const { orderId } = req.params;
     const order = await OrderService.getOrder(orderId);
     if (!order) {
