@@ -3,11 +3,13 @@ const router = Router();
 const orderCtr = require('../../../controllers/order');
 const { isAuthenticated, isCustomer } = require('../../../middleware/auth');
 
+router.use(isAuthenticated);
+
 router.route('/')
-    .get(isAuthenticated, orderCtr.getOrders)
+    .get(orderCtr.getOrders)
     .post(isCustomer, orderCtr.createOrder);
 
 router.route('/:orderId')
-    .get(isAuthenticated, orderCtr.getOrder);
+    .get(orderCtr.getOrder);
 
 module.exports = router;
