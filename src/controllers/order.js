@@ -37,3 +37,9 @@ const createOrder = async (req, res) => {
 
     res.status(StatusCodes.CREATED).json({ order });
 }
+
+module.exports = {
+    getOrders,
+    getOrder,
+    createOrder
+}
