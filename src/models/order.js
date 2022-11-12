@@ -69,7 +69,8 @@ const orderSchema = new mongoose.Schema({
                 ref: 'Product',
             },
             quantity: Number,
-            price: Number
+            price: Number,
+            total: Number
         }
     ],
     total: Number,
