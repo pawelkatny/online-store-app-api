@@ -59,7 +59,7 @@ class CustomerService {
         return Customer.findByIdAndUpdate(userId, {
             $set: { cart: {
                 products: [],
-                tota: 0
+                total: 0
             }}
         });
     }
