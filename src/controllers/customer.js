@@ -170,6 +170,27 @@ const checkout = async (req, res) => {
 
     res.status(StatusCodes.OK).json({ checkout });
 }
+
+const showOrder = async (req, res) => {
+    const currentUser = req.user;
+    const { orderId } = req.params;
+
+    const order = await CustomerService.showOrder(currentUser.id, orderId);
+    if (!order) {
+        if (checkout.isEmpty) {
+            throw new CustomError('Not found', StatusCodes.NOT_FOUND);
+        }
+    }
+
+    res.status(StatusCodes.OK).json({ order });
+}
+
+const showOrderHistory = async (res, res) => {
+    const currentUser = req.user;
+    const orders = await CustomerService.showOrderHistory(currentUser.id, orderId);
+
+    res.status(StatusCodes.OK).json({ orders });
+}
 module.exports = {
     getInfo,
     getCart,
@@ -185,5 +206,7 @@ module.exports = {
     addProductToFav,
     removeProductFromFav,
     getFavProducts,
-    checkout
+    checkout,
+    showOrder,
+    showOrderHistory
 }
