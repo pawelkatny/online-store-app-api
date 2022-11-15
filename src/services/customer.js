@@ -156,6 +156,14 @@ class CustomerService {
             shipMethods: shipMethods
         }
     }
+
+    static async showOrderHistory(customerId) {
+        return Order.find({ customer: customerId }).sort({ createdAt: 'desc' });
+    }
+
+    static async showOrder(customerId, orderId) {
+        return Order.findOne({ _id: orderId, customer: customerId });
+    }
 }
 
 module.exports = CustomerService;
