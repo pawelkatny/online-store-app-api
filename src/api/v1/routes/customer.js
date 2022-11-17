@@ -33,4 +33,10 @@ router.route('/cart/product/:productId')
 router.route('/checkout')
     .get(customerCtr.checkout);
 
+router.route('/orders')
+    .get(customerCtr.showOrdersHistory);
+
+router.route('/orders/:orderId')
+    .get(customerCtr.showOrder)
+
 module.exports = router;
