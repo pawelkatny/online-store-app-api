@@ -31,7 +31,7 @@ const getOrder = async (req, res) => {
 
 const createOrder = async (req, res) => {
     const currentUser = req.user;
-    const { delivery, address, products } = orderData;
+    const { delivery, address, products } = req.body;
 
     const order = await OrderService.createOrder(currentUser.id, {
         delivery, address, products

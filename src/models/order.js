@@ -30,7 +30,7 @@ const orderSchema = new mongoose.Schema({
     },
     delivery: {
         type: String,
-        enum: ['Inpost, UPS, DHL'],
+        enum: ['Inpost', 'UPS', 'DHL'],
         required: true
     },
     address: {
