@@ -4,9 +4,9 @@ const Product = require('../models/product');
 class OrderService {
     static async createOrder (customerId, orderData) {
         const { delivery, address, products } = orderData;
-        const today = new Date();
-        const currentMonth = today.toDateString('default', { month: 'short' });
-        const currentYear = today.toDateString('default', { year: 'long' });
+        const today = new Date().toDateString('default', { month: 'short', year: 'long' });
+        const currentMonth = today.split(' ')[1];
+        const currentYear = today.split(' ')[3];
         const lastCurrentMonthOrder = await Order.findOne({ number: {$regex: `/${currentMonth}/`}});
         let index = 1;
         if (lastCurrentMonthOrder) {
@@ -16,15 +16,15 @@ class OrderService {
         }
         const orderNumber = `${index}/${currentMonth}/${currentYear}`;
 
-        const updatedProducts = products.map(async p => {
+        const updatedProducts = await Promise.all(products.map(async p => {
             const productId = p.product;
             const product = await Product.findById(productId, { price: 1, _id: 0});
             p.price = product.price;
             p.total = p.quantity * product.price;
             return p;
-        });
+        }));
 
-        const orderTotal = updatedProducts.reduce((a, b) => a + b.price, 0);
+        const orderTotal = updatedProducts.reduce((a, b) => a + b.total, 0);
 
         const newOrder = {
             number: orderNumber,

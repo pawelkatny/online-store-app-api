@@ -1,7 +1,6 @@
 const CustomError = require('../error/customError');
 const CustomerService = require('../services/customer');
 const { StatusCodes } = require('http-status-codes');
-const { restart } = require('nodemon');
 
 const getInfo = async (req, res) => {
     const currentUser = req.user;
@@ -185,9 +184,9 @@ const showOrder = async (req, res) => {
     res.status(StatusCodes.OK).json({ order });
 }
 
-const showOrderHistory = async (res, res) => {
+const showOrdersHistory = async (req, res) => {
     const currentUser = req.user;
-    const orders = await CustomerService.showOrderHistory(currentUser.id, orderId);
+    const orders = await CustomerService.showOrdersHistory(currentUser.id);
 
     res.status(StatusCodes.OK).json({ orders });
 }
@@ -208,5 +207,5 @@ module.exports = {
     getFavProducts,
     checkout,
     showOrder,
-    showOrderHistory
+    showOrdersHistory
 }
