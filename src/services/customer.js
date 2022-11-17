@@ -157,7 +157,7 @@ class CustomerService {
         }
     }
 
-    static async showOrderHistory(customerId) {
+    static async showOrdersHistory(customerId) {
         return Order.find({ customer: customerId }).sort({ createdAt: 'desc' });
     }
 
