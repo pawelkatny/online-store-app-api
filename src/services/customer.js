@@ -8,6 +8,10 @@ class CustomerService {
         return Customer.findById(userId);
     }
 
+    static async updateInfo(userId, userData) {
+        const { name, email, phone}
+    }
+
     static async getCart(userId) {
         return Customer.findById(userId, { cart: 1, _id: 0 });
     }
