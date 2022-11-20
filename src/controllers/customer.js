@@ -1,6 +1,7 @@
 const CustomError = require('../error/customError');
 const CustomerService = require('../services/customer');
 const { StatusCodes } = require('http-status-codes');
+const UserService = require('../services/user');
 
 const getInfo = async (req, res) => {
     const currentUser = req.user;
@@ -10,6 +11,18 @@ const getInfo = async (req, res) => {
     }
 
     res.status(StatusCodes.OK).json({ user });
+}
+
+const updateInfo = async (req, res) => {
+    const currentUser = req.user;
+    const { name, email, phone } = req.body;
+    
+    const user = await UserService.updateInfo(currentUser.id, { name, email, phone });
+    if (!user) {
+        throw new CustomError('Not found', StatusCodes.NOT_FOUND);
+    }
+
+    res.status(StatusCodes.OK).send();
 }
 
 const getCart = async (req, res) => {
@@ -192,6 +205,7 @@ const showOrdersHistory = async (req, res) => {
 }
 module.exports = {
     getInfo,
+    updateInfo,
     getCart,
     updateProductCart,
     addToCart,
