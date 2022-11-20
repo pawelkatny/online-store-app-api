@@ -122,11 +122,17 @@ class CustomerService {
 
     static async addAddress(userId, addressData) {
         const addressId = new mongoose.Types.ObjectId().toString();
+        const user = await Customer.findById(userId, { adddresses: 1 });
         if (!addressData.name) {
 
             const newAddressName = `${addressData.street.name}, ${addressData.city}`;
             addressData.name = newAddressName;
         }
+
+        if (user.addresses.length == 0) {
+            addressData.default = true;
+        }
+
         return Customer.findByIdAndUpdate(userId,
             { $push: { addresses: { ...addressData, _id: addressId } } },
             { returnOriginal: false });

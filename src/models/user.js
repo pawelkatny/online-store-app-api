@@ -43,6 +43,7 @@ const userSchema = new mongoose.Schema({
     },
 
 
+
 }, { timestamps: true });
 
 userSchema.pre('save', async function () {
@@ -100,6 +101,10 @@ const customerSchema = new mongoose.Schema({
                 type: String,
                 maxlength: 50
             },
+            default: {
+                type: Boolean,
+                default: false
+            }
         }
     ],
 
