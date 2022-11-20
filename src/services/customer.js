@@ -31,7 +31,8 @@ class CustomerService {
             name: 1,
             phone: 1,
             email: 1,
-            addresses: 1
+            addresses: 1,
+            _id: 0
         });
 
         return user;
