@@ -211,6 +211,7 @@ const showOrdersHistory = async (req, res) => {
     res.status(StatusCodes.OK).json({ orders });
 }
 module.exports = {
+    getSummary,
     getInfo,
     updateInfo,
     getCart,

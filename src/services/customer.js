@@ -9,21 +9,23 @@ class CustomerService {
             name: 1,
             phone: 1,
             email: 1,
-            addresses: 1
+            addresses: 1,
+            _id: 0
         });
-
         const lastOrder = await Order.findOne({
             customer: userId
         },
             {
                 number: 1,
                 createdAt: 1,
-                total: 1
+                total: 1,
+                status: 1
             })
             .sort({ createdAt: 'desc' })
             .limit(1);
-
-        return { ...user, lastOrder };
+            user.lastOrder = 'test';
+            
+        return { ...user._doc, lastOrder };
     }
 
     static async getInfo(userId) {
