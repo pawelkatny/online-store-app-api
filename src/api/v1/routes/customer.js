@@ -5,6 +5,10 @@ const customerCtr = require('../../../controllers/customer');
 
 router.use(isCustomer);
 
+router.route('/')
+    .get(customerCtr.getInfo)
+    .post(customerCtr.updateInfo);
+
 router.route('/addresses')
     .get(customerCtr.getAddresses)
     .post(customerCtr.addAddress);
