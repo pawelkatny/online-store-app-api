@@ -5,7 +5,7 @@ const customerCtr = require('../../../controllers/customer');
 
 router.use(isCustomer);
 
-router.route('/')
+router.route('/info')
     .get(customerCtr.getInfo)
     .post(customerCtr.updateInfo);
 
