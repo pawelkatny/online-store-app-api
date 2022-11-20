@@ -3,6 +3,13 @@ const CustomerService = require('../services/customer');
 const { StatusCodes } = require('http-status-codes');
 const UserService = require('../services/user');
 
+const getSummary = async (req, res) => {
+    const currentUser = req.user;
+    const summary = await CustomerService.getSummary(currentUser.id);
+    
+    res.status(StatusCodes.OK).json({ summary });
+}
+
 const getInfo = async (req, res) => {
     const currentUser = req.user;
     const user = await CustomerService.getInfo(currentUser.id);
