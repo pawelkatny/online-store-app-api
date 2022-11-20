@@ -5,11 +5,47 @@ const Order = require('../models/order');
 
 class CustomerService {
     static async getInfo(userId) {
-        return Customer.findById(userId);
+        const user = await Customer.findById(userId, {
+            name: 1,
+            phone: 1,
+            email: 1,
+            addresses: 1
+        });
+
+        const lastOrder = await Order.findOne({
+            customer: userId
+        },
+            {
+                number: 1,
+                createdAt: 1,
+                total: 1
+            })
+            .sort({ createdAt: 'desc' })
+            .limit(1);
+
+        user.lastOrder = lastOrder;
+        return user;
     }
 
     static async updateInfo(userId, userData) {
-        const { name, email, phone}
+        const { name, email, phone } = userData;
+
+        return Customer.updateOne({
+            _id: userId,
+            $or: [
+                { name: { $ne: name } },
+                { email: { $ne: email } },
+                { phone: { $ne: phone } }
+            ]
+        },
+        {
+            $set: {
+                name: name,
+                email: email,
+                phone: phone
+            }
+        }
+        );
     }
 
     static async getCart(userId) {
@@ -18,7 +54,7 @@ class CustomerService {
 
     static async addProductToCart(userId, productId) {
         const product = await Product.findById(productId);
-        const customer = await Customer.findById(userId, { cart: 1});
+        const customer = await Customer.findById(userId, { cart: 1 });
         const cart = customer.cart;
         const cartProductIndex = cart.products.findIndex(p => p.product.toString() == productId);
         if (cartProductIndex >= 0) {
@@ -32,25 +68,25 @@ class CustomerService {
             });
         }
         await customer.updateCartTotal();
-        
+
         return customer.save();
     }
 
     static async updateProductCartQty(userId, productId, qty) {
-        const customer = await Customer.findById(userId, { cart: 1});
+        const customer = await Customer.findById(userId, { cart: 1 });
         const cart = customer.cart;
 
         const cartProductIndex = cart.products.findIndex(p => p.product == productId);
         if (cartProductIndex >= 0 && qty > 0) {
             cart.products[cartProductIndex].quantity = qty;
-        } 
+        }
         await customer.updateCartTotal();
 
         return customer.save();
     }
 
     static async removeProductFromCart(userId, productId) {
-        const customer = await Customer.findById(userId, { cart: 1});
+        const customer = await Customer.findById(userId, { cart: 1 });
         const cart = customer.cart;
         const updatedCartProducts = cart.products.filter(p => p.product != productId);
         cart.products = updatedCartProducts;
@@ -61,10 +97,12 @@ class CustomerService {
 
     static async clearCart(userId) {
         return Customer.findByIdAndUpdate(userId, {
-            $set: { cart: {
-                products: [],
-                total: 0
-            }}
+            $set: {
+                cart: {
+                    products: [],
+                    total: 0
+                }
+            }
         });
     }
 
@@ -97,13 +135,15 @@ class CustomerService {
     static async updateAddress(userId, addressId, addressData) {
         console.log({ userId, addressId, addressData });
         return Customer.findOneAndUpdate({ _id: userId, "addresses._id": addressId },
-            { $set: {
-                "addresses.$.name": addressData.name,
-                "addresses.$.street": addressData.street,
-                "addresses.$.zipCode": addressData.zipCode,
-                "addresses.$.city": addressData.city, 
-                "addresses.$.country":  addressData.country,
-            } },
+            {
+                $set: {
+                    "addresses.$.name": addressData.name,
+                    "addresses.$.street": addressData.street,
+                    "addresses.$.zipCode": addressData.zipCode,
+                    "addresses.$.city": addressData.city,
+                    "addresses.$.country": addressData.country,
+                }
+            },
             {
                 returnOriginal: false,
                 fields: {
@@ -123,31 +163,31 @@ class CustomerService {
     }
 
     static async addProductToFav(userId, productId) {
-        return Customer.findByIdAndUpdate(userId, { $addToSet: { favorites: productId }});
+        return Customer.findByIdAndUpdate(userId, { $addToSet: { favorites: productId } });
     }
 
     static async removeProductFromFav(userId, productId) {
-        return Customer.findByIdAndUpdate(userId, { $pull: { favorites: productId }});
+        return Customer.findByIdAndUpdate(userId, { $pull: { favorites: productId } });
     }
 
-    static async showFavProducts(userId) {  
+    static async showFavProducts(userId) {
         return Customer.findById(userId, { favorites: 1, _id: 0 })
-        .populate({ 
-            path: 'favorites',
-            select: {
-                name: 1,
-                images: 1,
-                price: 1,
-                quantity: 1
-            }
-        });
+            .populate({
+                path: 'favorites',
+                select: {
+                    name: 1,
+                    images: 1,
+                    price: 1,
+                    quantity: 1
+                }
+            });
     }
 
     static async checkout(userId) {
         let isCartEmpty = false;
         const user = await Customer.findById(userId, { cart: 1, addresses: 1 });
         const shipMethods = Order.schema.path('delivery').enumValues;
-        
+
         if (!user || user.cart.products.length == 0) {
             isCartEmpty = true;
         }
