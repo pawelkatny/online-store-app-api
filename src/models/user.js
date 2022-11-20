@@ -37,6 +37,12 @@ const userSchema = new mongoose.Schema({
         }
     },
 
+    phone: {
+        type: String,
+        maxlength: 20
+    },
+
+
 }, { timestamps: true });
 
 userSchema.pre('save', async function () {
@@ -67,11 +73,6 @@ userSchema.methods.createToken = async function () {
 const User = mongoose.model('User', userSchema);
 
 const customerSchema = new mongoose.Schema({
-    phone: {
-        type: String,
-        maxlength: 20
-    },
-
     addresses: [
         {
             _id: String,
@@ -129,7 +130,8 @@ const customerSchema = new mongoose.Schema({
         lastDate: Date
     }
 }, {
-    discriminatorKey: 'type'
+    discriminatorKey: 'type',
+    timestamps: true
 });
 
 customerSchema.methods.updateCartTotal = async function () {
