@@ -44,6 +44,9 @@ class CustomerService {
                 email: email,
                 phone: phone
             }
+        },
+        {
+            new: true
         }
         );
     }
