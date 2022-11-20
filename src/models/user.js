@@ -61,7 +61,7 @@ userSchema.methods.comparePwd = async function (inputPwd) {
 
 userSchema.methods.createToken = async function () {
     const [token, err] = await jwt.sign({ id: this._id }, jwt_secret, {
-        expiresIn: '1d'
+        expiresIn: '30d'
     });
 
     if (err) {

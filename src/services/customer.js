@@ -4,7 +4,7 @@ const Product = require('../models/product');
 const Order = require('../models/order');
 
 class CustomerService {
-    static async getInfo(userId) {
+    static async getSummary(userId) {
         const user = await Customer.findById(userId, {
             name: 1,
             phone: 1,
@@ -23,14 +23,24 @@ class CustomerService {
             .sort({ createdAt: 'desc' })
             .limit(1);
 
-        user.lastOrder = lastOrder;
+        return { ...user, lastOrder };
+    }
+
+    static async getInfo(userId) {
+        const user = await Customer.findById(userId, {
+            name: 1,
+            phone: 1,
+            email: 1,
+            addresses: 1
+        });
+
         return user;
     }
 
     static async updateInfo(userId, userData) {
         const { name, email, phone } = userData;
 
-        return Customer.updateOne({
+        return Customer.findOneAndUpdate({
             _id: userId,
             $or: [
                 { name: { $ne: name } },
@@ -48,7 +58,12 @@ class CustomerService {
         {
             new: true
         }
-        );
+        ).select({ 
+            _id: 0,
+            name: 1,
+            email: 1,
+            phone: 1
+        });
     }
 
     static async getCart(userId) {

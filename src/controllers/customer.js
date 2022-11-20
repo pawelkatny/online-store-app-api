@@ -17,12 +17,12 @@ const updateInfo = async (req, res) => {
     const currentUser = req.user;
     const { name, email, phone } = req.body;
     
-    const user = await UserService.updateInfo(currentUser.id, { name, email, phone });
+    const user = await CustomerService.updateInfo(currentUser.id, { name, email, phone });
     if (!user) {
         throw new CustomError('Not found', StatusCodes.NOT_FOUND);
     }
 
-    res.status(StatusCodes.OK).send();
+    res.status(StatusCodes.OK).json({ user });
 }
 
 const getCart = async (req, res) => {

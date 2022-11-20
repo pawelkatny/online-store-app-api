@@ -10,7 +10,7 @@ router.route('/')
     .get(userCtr.getUsers)
     .post(userCtr.createUser);
 
-router.route('/:id')
+router.route('/:id(!\/me)')
     .get(userCtr.getUser)
     .patch(userCtr.updateUser)
     .delete(userCtr.deleteUser)
