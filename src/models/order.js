@@ -74,6 +74,8 @@ const orderSchema = new mongoose.Schema({
         }
     ],
     total: Number,
+},{
+    timestamps: true
 });
 
 const Order = mongoose.model('Order', orderSchema);
