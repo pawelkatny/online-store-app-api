@@ -11,7 +11,7 @@ const returnSchema = new mongoose.Schema({
         ref: 'Customer',
         required: true
     },
-    
+
     order: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Order',
@@ -32,7 +32,7 @@ const returnSchema = new mongoose.Schema({
             'On hold',
             'Pending refund',
             'Processing',
-            'Received '
+            'Received'
         ],
         required: true
     },

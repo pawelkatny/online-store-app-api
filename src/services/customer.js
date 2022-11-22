@@ -2,6 +2,8 @@ const { default: mongoose } = require('mongoose');
 const { Customer } = require('../models/user');
 const Product = require('../models/product');
 const Order = require('../models/order');
+const Return = require('../models/return');
+
 
 class CustomerService {
     static async getSummary(userId) {
@@ -23,8 +25,8 @@ class CustomerService {
             })
             .sort({ createdAt: 'desc' })
             .limit(1);
-            user.lastOrder = 'test';
-            
+        user.lastOrder = 'test';
+
         return { ...user._doc, lastOrder };
     }
 
@@ -51,17 +53,17 @@ class CustomerService {
                 { phone: { $ne: phone } }
             ]
         },
-        {
-            $set: {
-                name: name,
-                email: email,
-                phone: phone
+            {
+                $set: {
+                    name: name,
+                    email: email,
+                    phone: phone
+                }
+            },
+            {
+                new: true
             }
-        },
-        {
-            new: true
-        }
-        ).select({ 
+        ).select({
             _id: 0,
             name: 1,
             email: 1,
@@ -234,6 +236,85 @@ class CustomerService {
 
     static async showOrder(customerId, orderId) {
         return Order.findOne({ _id: orderId, customer: customerId });
+    }
+
+    static async createReturn(customerId, returnData) {
+        const { orderId, products, reason } = returnData;
+
+        //get order data 
+        const order = await Order.findById(orderId, { number: 1 });
+        //get returns connected to order and map to products
+        const returns = await Return.find({ order: orderId }).populate('order').sort({ createdAt: 'desc' });
+
+        //check if items were already returned
+        let returnedProducts;
+        returns.forEach(r => {
+            products.forEach(p => {
+                const productReturn = r.products.find(pr => pr.product == p.productId);
+                const productOrder = r.order.products.find(po => po.products.product == p.productId);
+                //check if product exists on order
+                const returnedProductIndex = returnedProducts.findIndex(rp => rp.productId == p.productId);
+                if (!returnedProductIndex) {
+                    returnedProducts.push(
+                        {
+                            ...p,
+                            returnedQty: productReturn.quantity,
+                            orderQty: productOrder.quantity,
+                            name: productOrder.name,
+                            price: productOrder.price
+                        }
+                    );
+                } else {
+                    returnedProducts[returnedProductIndex].returnedQty += productReturn.quantity; 
+                }
+                 
+            });
+        });
+
+        const returnAvailability = returnedProducts.map(rp => {
+            const qtyToReturn = rp.qty;
+            const availableQtyToReturn = rp.orderQty - rp.returnedQty;
+            let canBeReturned = false;
+            if (availableQtyToReturn - qtyToReturn >= 0 ) {
+                canBeReturned = true;
+            }
+
+            return {
+                ...rp,
+                canBeReturned
+            }
+        }).filter(rp => rp.canBeReturned == true);
+        //pass - create return - not - return error
+
+        //create return number
+        let returnNumber = `R/${order.number}/1`;
+        if (returns.length > 0) {
+            const lastReturnId = returns[0].number.split('/')[4];
+            returnNumber = `R/${order.number}/${lastReturnI + 1}`;
+        }
+
+        if (returnAvailability.length > 0) {
+            const newReturn = {
+                number: returnNumber,
+                customer: customerId,
+                order: orderId,
+                reason: reason,
+                status: 'Processing',
+                products: returnAvailability.map(ra => {
+                    return {
+                        name: ra.name,
+                        product: ra.productId,
+                        quantity: ra.qty,
+                        price: ra.price,
+                        total: ra.price * ra.qty,
+                        notes: ra.notes
+                    }
+                })
+            }
+            return Return.create({ ...newReturn });
+        }
+        
+        return null;
     }
 }
 
