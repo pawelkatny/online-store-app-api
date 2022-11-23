@@ -63,7 +63,10 @@ const defaultPermissions = [
         name: 'Can edit any user(s).',
         tag: 'edit-user'
     },
-
+    {
+        name: 'Can edit any return(s).',
+        tag: 'edit-return'
+    },
 ]
 
 module.exports = defaultPermissions;

@@ -17,7 +17,8 @@ const defaultRoles = [
             'edit-product',
             'edit-conversation',
             'edit-file',
-            'edit-user'
+            'edit-user',
+            'edit-return'
         ]
     },
     {
