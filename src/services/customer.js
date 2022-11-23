@@ -309,7 +309,7 @@ class CustomerService {
                         total: ra.price * ra.qty,
                         notes: ra.notes
                     }
-                });
+                })
             }
             return Return.create({ ...newReturn });
         }

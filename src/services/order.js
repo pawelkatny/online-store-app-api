@@ -46,8 +46,6 @@ class OrderService {
     static async getOrder(orderId) {
         return Order.findById(orderId);
     }
-
-
 }
 
 module.exports = OrderService; 

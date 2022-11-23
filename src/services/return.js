@@ -1,4 +1,5 @@
 const Return = require('../models/return');
+const Order = require('../models/order');
 
 class ReturnService {
     static async createReturn(customerId, returnData) {
@@ -85,6 +86,14 @@ class ReturnService {
         }
         
         return returnCreationStatus;
+    }
+
+    static async getReturns(params) {
+        return Return.find(params);
+    }
+
+    static async getReturn(returnId) {
+        return Return.findById(returnId);
     }
 }
 
