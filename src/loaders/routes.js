@@ -18,7 +18,7 @@ class RoutesLoader {
         app.use(`${prefix}/users`, userRoutes);
         app.use(`${prefix}/products`, productRoutes);
         app.use(`${prefix}/orders`, orderRoutes);
-        app.use(`${prefix}/returns`, orderRoutes);
+        app.use(`${prefix}/returns`, returnRoutes);
         app.use('*', (req, res, next) => {
             const err = new CustomError('Not found', 404);
             next(err);
