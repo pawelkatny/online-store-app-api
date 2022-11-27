@@ -125,6 +125,10 @@ class ReturnService {
     static async getReturn(returnId) {
         return Return.findById(returnId);
     }
+
+    static getCustomerReturn(customerId, returnId) {
+        return Return.findOne({ _id: returnId, customer: customerId });
+    }
 }
 
 module.exports = ReturnService;
