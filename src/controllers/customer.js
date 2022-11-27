@@ -226,9 +226,14 @@ const showReturn = async (req, res) => {
 
 const showReturnsHistory = async (req, res) => {
     const currentUser = req.user;
-    const params = { _id: currentUser.id };
-    const returns = await ReturnService.getReturns(params);
-
+    const params = { customer: currentUser.id };
+    const select = {
+        number: 1,
+        cratedAt: 1,
+        status: 1,
+        total: 1
+    };
+    const returns = await ReturnService.getReturns(params, select);
     res.status(StatusCodes.OK).json({ returns });
 }
 
