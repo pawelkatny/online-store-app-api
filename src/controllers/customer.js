@@ -2,6 +2,7 @@ const CustomError = require('../error/customError');
 const CustomerService = require('../services/customer');
 const { StatusCodes } = require('http-status-codes');
 const UserService = require('../services/user');
+const ReturnService = require('../services/return');
 
 const getSummary = async (req, res) => {
     const currentUser = req.user;
@@ -210,6 +211,27 @@ const showOrdersHistory = async (req, res) => {
 
     res.status(StatusCodes.OK).json({ orders });
 }
+
+const showReturn = async (req, res) => {
+    const currentUser = req.user;
+    const { returnId } = req.params;
+    const returnDoc = await ReturnService.getCustomerReturn(currentUser.id, returnId);
+
+    if (!returnDoc) {
+        throw new CustomError('Not found', StatusCodes.NOT_FOUND);
+    }
+
+    res.status(StatusCodes.OK).json({ returnDoc });
+}
+
+const showReturnsHistory = async (req, res) => {
+    const currentUser = req.user;
+    const params = { _id: currentUser.id };
+    const returns = await ReturnService.getReturns(params);
+
+    res.status(StatusCodes.OK).json({ returns });
+}
+
 module.exports = {
     getSummary,
     getInfo,
@@ -229,5 +251,7 @@ module.exports = {
     getFavProducts,
     checkout,
     showOrder,
-    showOrdersHistory
+    showOrdersHistory,
+    showReturn,
+    showReturnsHistory
 }

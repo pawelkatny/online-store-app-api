@@ -46,4 +46,10 @@ router.route('/orders')
 router.route('/orders/:orderId')
     .get(customerCtr.showOrder)
 
+router.route('/returns')
+    .get(customerCtr.showReturnsHistory);
+
+router.route('/returns/:returnId')
+    .get(customerCtr.showReturn);
+
 module.exports = router;
