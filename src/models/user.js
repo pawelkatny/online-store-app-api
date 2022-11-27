@@ -24,6 +24,11 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Please provide password.']
     },
 
+    passwordReset: {
+        token: String,
+        createdAt: Date
+    },
+
     name: {
         first: {
             type: String,
@@ -42,7 +47,12 @@ const userSchema = new mongoose.Schema({
         maxlength: 20
     },
 
+    lastLoginDate: Date,
 
+    failedLogins: {
+        count: Number,
+        lastDate: Date
+    }
 
 }, { timestamps: true });
 
@@ -69,6 +79,14 @@ userSchema.methods.createToken = async function () {
     }
 
     return token;
+}
+
+userSchema.methods.createResetPwdToken = async function() {
+    const pwdResetToken = new mongoose.Types.ObjectId();
+    this.passwordReset = {
+        token: pwdResetToken,
+        createdAt: Date.now
+    };
 }
 
 const User = mongoose.model('User', userSchema);
@@ -126,14 +144,8 @@ const customerSchema = new mongoose.Schema({
     favorites: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product"
-    }],
+    }]
 
-    lastLoginDate: Date,
-
-    failedLogins: {
-        count: Number,
-        lastDate: Date
-    }
 }, {
     discriminatorKey: 'type',
     timestamps: true
