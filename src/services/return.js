@@ -118,8 +118,8 @@ class ReturnService {
         return returnCreationStatus;
     }
 
-    static async getReturns(params) {
-        return Return.find(params);
+    static async getReturns(params, select = {}, options = {}) {
+        return Return.find(params, select, options);
     }
 
     static async getReturn(returnId) {
