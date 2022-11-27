@@ -34,9 +34,7 @@ class ReturnService {
                     const productOrder = order.products.find(po => po.product == p.productId);
                     //check if product exists on order
                     const returnedProductIndex = returnedProducts.findIndex(rp => rp.productId == p.productId);
-                    console.log(returnedProductIndex)
                     if (returnedProductIndex < 0) {
-                        console.log('test')
                         returnedProducts.push(
                             {
                                 ...p,
@@ -126,7 +124,7 @@ class ReturnService {
         return Return.findById(returnId);
     }
 
-    static getCustomerReturn(customerId, returnId) {
+    static async getCustomerReturn(customerId, returnId) {
         return Return.findOne({ _id: returnId, customer: customerId });
     }
 }
