@@ -85,7 +85,7 @@ userSchema.methods.createResetPwdToken = async function() {
     const pwdResetToken = new mongoose.Types.ObjectId();
     this.passwordReset = {
         token: pwdResetToken,
-        createdAt: Date.now
+        createdAt: Date.now()
     };
 }
 

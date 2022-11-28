@@ -10,17 +10,13 @@ router.route('/')
     .get(userCtr.getUsers)
     .post(userCtr.createUser);
 
-router.route('/:id(!\/me)')
+router.route('/:userId([a-fA-F\\d]{24})')
     .get(userCtr.getUser)
     .patch(userCtr.updateUser)
     .delete(userCtr.deleteUser)
 
 router.route('/password').get((req, res) => {
     res.status(200).json({ msg: 'User Pwd ' });
-});
-
-router.route('/password/reset').get((req, res) => {
-    res.status(200).json({ msg: 'User pwd reset ' });
 });
 
 router.use('/me', meRoutes);
