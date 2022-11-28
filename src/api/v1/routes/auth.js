@@ -6,4 +6,9 @@ router.route('/register').post(authController.register);
 
 router.route('/login').post(authController.login);
 
+router.route('/request-password-reset').post(authController.requestPasswordReset);
+
+router.route('/reset-password')
+    .post(authController.resetPassword);
+
 module.exports = router;

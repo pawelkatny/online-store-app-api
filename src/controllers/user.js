@@ -22,9 +22,10 @@ const getUser = async (req, res) => {
     if (!currentUser || !currentUser.hasPermission('view-user')) {
         throw new CustomError('Unauthorized', StatusCodes.UNAUTHORIZED);
     }
-    const { id } = req.params;
+    const { userId } = req.params;
+    console.log(userId)
 
-    const user = await UserService.getUserById(id);
+    const user = await UserService.getUserById(userId);
     if (!user) {
         throw new CustomError('Not found', StatusCodes.NOT_FOUND);
     }
