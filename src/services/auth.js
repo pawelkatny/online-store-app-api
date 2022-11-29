@@ -75,13 +75,10 @@ class AuthService {
             success: false
         }
 
-        console.log({ userId, tokenId, password})
         const user = await User.findOne({
             _id: userId,
             "passwordReset.token": tokenId
         });
-
-        console.log(user);
 
         if (!user) {
             status.msg = 'User does not exist.';
