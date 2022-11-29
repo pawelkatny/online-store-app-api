@@ -48,3 +48,5 @@ class MailerService {
         return this.transporter.sendMail(message);
     }
 }
+
+module.exports = MailerService;
