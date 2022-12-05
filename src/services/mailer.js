@@ -1,5 +1,5 @@
 const { installed: { client_id, client_secret } } = require('../config/mailer/credentials.json');
-const { refresh_token, access_token, expiry_date } = require('../config/mailer/token.json');\
+const { refresh_token, access_token, expiry_date } = require('../config/mailer/token.json');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const nmHandlebars = require('nodemailer-express-handlebars');
@@ -11,7 +11,7 @@ class MailerService {
     }
 
     createTransporter() {
-        nhbs = nmHandlebars({
+        const nhbs = nmHandlebars({
             viewEngine: {
                 defaultLayout: false
             },
@@ -19,7 +19,7 @@ class MailerService {
         });
 
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
+            service: 'Gmail',
             auth: {
                 type: 'OAuth2',
                 user: 'pawel.katny.dev@gmail.com',
@@ -38,6 +38,7 @@ class MailerService {
     }
 
     async sendEmail(options) {
+
         const message = {
             to: options.header.to,
             subject: options.header.subject,

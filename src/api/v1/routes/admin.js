@@ -1,8 +1,12 @@
 const { Router } = require('express');
 const router = Router();
 const { isAuthenticated } = require('../../../middleware/auth');
-const { dashboard } = require('../../../controllers/admin');
+const { dashboard, checkMailerConfig } = require('../../../controllers/admin');
 
-router.route('/dashboard').get(isAuthenticated, dashboard);
+router.use(isAuthenticated);
+
+router.route('/dashboard').get(dashboard);
+
+router.route('/check-mailer-config').get(checkMailerConfig);
 
 module.exports = router;
