@@ -92,6 +92,12 @@ userSchema.methods.createResetPwdToken = async function() {
 const User = mongoose.model('User', userSchema);
 
 const customerSchema = new mongoose.Schema({
+
+    confirmed: {
+        type: Boolean,
+        default: false
+    },
+
     addresses: [
         {
             _id: String,
@@ -144,7 +150,18 @@ const customerSchema = new mongoose.Schema({
     favorites: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product"
-    }]
+    }],
+    
+    accountActivation: {
+        token: String,
+        createdAt: Date
+    },
+
+    expireAt: {
+        type: Date,
+        default: new Date(new Date().valueOf() + 604800000),
+        expires: 60
+      }
 
 }, {
     discriminatorKey: 'type',
