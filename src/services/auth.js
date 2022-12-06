@@ -62,11 +62,13 @@ class AuthService {
         if (user) {
             await user.createResetPwdToken();
             await user.save();
-            //send reset email
+
             const mailer = new MailerService();
             const emailOptions = {
-                to: email,
-                subject: 'Password reset',
+                header: {
+                    to: email,
+                    subject: 'Password reset'
+                },
                 template: 'password-reset',
                 context: {
                     companyName: 'TESTING PRODUCT',
@@ -74,10 +76,14 @@ class AuthService {
                     resetPwdUri: user.passwordReset.token
                 }
             }
-            await mailer.sendEmail(emailOptions);
-            status.success = true;
-            status.msg = 'Your password was reseted. Pleas check your email and follow further instructions.';
-            status.code = StatusCodes.OK;
+            const emailStatus = await mailer.sendEmail(emailOptions);
+
+            if (emailStatus.messageId) {
+                status.success = true;
+                status.msg = 'Your password was reseted. Pleas check your email and follow further instructions.';
+                status.code = StatusCodes.OK;
+            }
+
         }
 
         return status;
