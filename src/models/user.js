@@ -82,9 +82,9 @@ userSchema.methods.createToken = async function () {
 }
 
 userSchema.methods.createResetPwdToken = async function() {
-    const pwdResetToken = new mongoose.Types.ObjectId();
+    const token = new mongoose.Types.ObjectId();
     this.passwordReset = {
-        token: pwdResetToken,
+        token: token,
         createdAt: Date.now()
     };
 }
@@ -172,6 +172,14 @@ customerSchema.methods.updateCartTotal = async function () {
     const cartProducts = this.cart.products;
     const cartTotal = cartProducts.reduce((a, b) => a + (b.quantity * b.price), 0);
     this.cart.total = cartTotal;
+}
+
+customerSchema.methods.createActivationToken = async function () {
+    const token = new mongoose.Types.ObjectId();
+    this.accountActivation = {
+        token: token,
+        createdAt: Date.now()
+    };
 }
 
 const Customer = User.discriminator('Customer', customerSchema);
