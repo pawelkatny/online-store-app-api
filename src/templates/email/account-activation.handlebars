@@ -337,7 +337,7 @@
     </style>
   </head>
   <body>
-    <span class="preheader">Use this link to reset your password. The link is only valid for 1 hour.</span>
+    <span class="preheader">Use this link to activate your account. The link is only valid for 7 days.</span>
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
       <tr>
         <td>&nbsp;</td>
@@ -360,8 +360,9 @@
                     <tr>
                       <td>
                         <p>Hi {{name}},</p>
-                        <p>You have requested to reset your password.</p>
-                        <p>We cannot simply send you your old password. A unique link to reset your password has been generated for you. To reset your password, click the following link and follow instructions.</p>
+                        <p>Thank you for registering.</p>
+                        <p>Before you can log in to your account, it has to be activated.</p>
+                        <p>To activate your account, click the following link and follow instructions.</p>
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                           <tbody>
                             <tr>
@@ -369,16 +370,14 @@
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                   <tbody>
                                     <tr>
-                                      <td> <a href="{{resetPwdUri}}" target="_blank">RESET PASSWORD</a> </td>
+                                      <td> <a href="{{activateLink}}" target="_blank">ACTIVATE</a> </td>
                                     </tr>
                                   </tbody>
                                 </table>
                               </td>
                             </tr>
                           </tbody>
-                        </table>
-                        <!-- <p>This is a really simple email template. Its sole purpose is to get the recipient to click the button with no distractions.</p>
-                        <p>Good luck! Hope it works.</p> -->
+                        </table>>
                       </td>
                     </tr>
                   </table>
