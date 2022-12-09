@@ -3,9 +3,9 @@ const { StatusCodes } = require('http-status-codes');
 
 const register = async (req, res) => {
     const { email, name, password } = req.body;
-    const { user, token } = await AuthService.register({ email, name, password, roleName: 'admin' });
+    const status = await AuthService.register({ email, name, password });
 
-    res.status(StatusCodes.CREATED).json({ user, token });
+    res.status(status.code).send();
 }
 
 const login = async (req, res) => {
