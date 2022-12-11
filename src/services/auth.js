@@ -60,9 +60,18 @@ class AuthService {
     static async login(loginData) {
         const { email, password } = loginData;
 
-        const user = await User.findOne({ email: email });
+        const user = await User.findOne({ email: email })
+            .populate({
+                path: 'role',
+                model: 'Role'
+            });
+
         if (!user) {
             throw new CustomError('Unathorized', StatusCodes.UNAUTHORIZED);
+        }
+
+        if (user.role.name == 'customer' && !user.confirmed) {
+            throw new CustomError('Account hasn`t been activated yet.', StatusCodes.UNAUTHORIZED);
         }
 
         const pwdMatch = await user.comparePwd(password);
