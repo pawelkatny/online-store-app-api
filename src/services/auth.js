@@ -5,6 +5,7 @@ const Role = require('../models/role');
 const MailerService = require('./mailer');
 const jwt = require('async-jsonwebtoken');
 const { jwt_secret } = require('../config');
+const { startSession } = require('../models/role');
 
 class AuthService {
 
@@ -150,7 +151,8 @@ class AuthService {
 
     static async activateAccount(token) {
         const status = {
-            success: false
+            success: false,
+            code: StatusCodes.INTERNAL_SERVER_ERROR
         }
 
         const user = User.findOne({
@@ -170,6 +172,7 @@ class AuthService {
 
         status.success = true;
         status.msg = 'Your account has been activated. You can now log in.';
+        status.code = StatusCodes.OK;
 
         return status;
     }
