@@ -30,7 +30,7 @@ const resetPassword = async (req, res) => {
 }
 
 const activateAccount = async (req, res) => {
-    const { token } = req.params
+    const { token } = req.params;
     const status = await AuthService.activateAccount(token);
 
     res.status(status.code).json({ success: status.success, msg: status.msg});
