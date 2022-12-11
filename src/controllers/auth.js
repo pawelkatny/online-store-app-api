@@ -29,9 +29,17 @@ const resetPassword = async (req, res) => {
     res.status(status.code).json({ success: status.success, msg: status.msg });
 }
 
+const activateAccount = async (req, res) => {
+    const { token } = req.params
+    const status = await AuthService.activateAccount(token);
+
+    res.status(status.code).json({ success: status.success, msg: status.msg});
+}
+
 module.exports = {
     register,
     login,
     requestPasswordReset,
-    resetPassword
+    resetPassword,
+    activateAccount
 }
