@@ -117,14 +117,14 @@ class AuthService {
         return status;
     }
 
-    static async resetPassword(userId, tokenId, password) {
+    static async resetPassword(userId, token, password) {
         const status = {
             success: false
         }
 
         const user = await User.findOne({
             _id: userId,
-            "passwordReset.token": tokenId
+            "passwordReset.token": token
         });
 
         if (!user) {
@@ -144,6 +144,32 @@ class AuthService {
             status.msg = 'Password successfully reseted. Please login using new password.';
             status.code = StatusCodes.OK;
         }
+
+        return status;
+    }
+
+    static async activateAccount(token) {
+        const status = {
+            success: false
+        }
+
+        const user = User.findOne({
+            "accountActivation.token": token
+        });
+
+        if (!user) {
+            status.msg = 'User does not exist.';
+            status.code = StatusCodes.NOT_FOUND;
+        }
+
+        const currentDate = new Date();
+        const expireAt = currentDate.setFullYear(currentDate.getFullYear() + 100);
+        user.expireAt = expireAt;
+        user.confirmed = true;
+        await user.save();
+
+        status.success = true;
+        status.msg = 'Your account has been activated. You can now log in.';
 
         return status;
     }
