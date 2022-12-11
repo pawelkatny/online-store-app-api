@@ -11,6 +11,6 @@ router.route('/request-password-reset').post(authController.requestPasswordReset
 router.route('/reset-password')
     .post(authController.resetPassword);
 
-router.route('/activate-account/:token', authController.activateAccount);
+router.route('/activate-account/token/:token').get(authController.activateAccount);
 
 module.exports = router;

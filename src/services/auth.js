@@ -164,7 +164,8 @@ class AuthService {
             code: StatusCodes.INTERNAL_SERVER_ERROR
         }
 
-        const user = User.findOne({
+        const user = await Customer.findOne({
+            confirmed: false,
             "accountActivation.token": token
         });
 
