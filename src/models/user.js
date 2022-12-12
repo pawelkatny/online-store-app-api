@@ -93,7 +93,7 @@ const User = mongoose.model('User', userSchema);
 
 const customerSchema = new mongoose.Schema({
 
-    confirmed: {
+    active: {
         type: Boolean,
         default: false
     },

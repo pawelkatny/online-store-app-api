@@ -70,7 +70,7 @@ class AuthService {
             throw new CustomError('Unathorized', StatusCodes.UNAUTHORIZED);
         }
 
-        if (user.role.name == 'customer' && !user.confirmed) {
+        if (user.role.name == 'customer' && !user.active) {
             throw new CustomError('Account hasn`t been activated yet.', StatusCodes.UNAUTHORIZED);
         }
 
@@ -177,7 +177,7 @@ class AuthService {
         const currentDate = new Date();
         const expireAt = currentDate.setFullYear(currentDate.getFullYear() + 100);
         user.expireAt = expireAt;
-        user.confirmed = true;
+        user.active = true;
         await user.save();
 
         status.success = true;
