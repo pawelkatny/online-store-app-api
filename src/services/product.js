@@ -3,8 +3,15 @@ const Review = require('../models/review');
 const { Customer } = require('../models/user');
 
 class ProductService {
-    static async getProducts(params) {
-        return Product.find(params);
+    static async getProducts(query) {
+        const { name } = query;
+        const queryObject = {};
+        
+        if (query.name) {
+            queryObject.name = { $regex: name, $options: 'i' };
+        }
+
+        return Product.find(queryObject);
     }
 
     static async getProduct(productId) {

@@ -3,11 +3,8 @@ const ProductService = require('../services/product');
 const { StatusCodes } = require('http-status-codes');
 
 const getProducts = async (req, res) => {
-    const { query } = req;
-
-    //build query object
-    const queryObject = {};
-    const products = await ProductService.getProducts(queryObject);
+    const query = req.query;
+    const products = await ProductService.getProducts({ ...query });
 
     res.status(StatusCodes.OK).json({ products });
 }
