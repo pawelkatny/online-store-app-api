@@ -4,14 +4,23 @@ const { Customer } = require('../models/user');
 
 class ProductService {
     static async getProducts(query) {
-        const { name } = query;
+        const { name, sort } = query;
         const queryObject = {};
         
-        if (query.name) {
+        if (name) {
             queryObject.name = { $regex: name, $options: 'i' };
         }
 
-        return Product.find(queryObject);
+        const products = Product.find(queryObject);
+
+        if (sort) {
+            const [ option, type ] = sort.split('#');
+            const sortObject = {};
+            sortObject[option] = type;
+            products.sort(sortObject);
+        }
+
+        return products;
     }
 
     static async getProduct(productId) {
