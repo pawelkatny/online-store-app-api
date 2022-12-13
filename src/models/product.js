@@ -10,13 +10,11 @@ const productSchema = new mongoose.Schema({
     scientificName: {
         type: String,
         required: [true, 'Product scientific name is required.'],
-        unique: true,
-        maxlength: 50
+        maxlength: 200
     },
     family: {
         type: String,
         required: [true, 'Product family is required.'],
-        unique: true,
         maxlength: 50
     },
     description: {
