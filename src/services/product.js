@@ -4,11 +4,43 @@ const { Customer } = require('../models/user');
 
 class ProductService {
     static async getProducts(query) {
-        const { name, sort } = query;
+        const { name, sort, family, scientificName, numeric } = query;
         const queryObject = {};
         
         if (name) {
             queryObject.name = { $regex: name, $options: 'i' };
+        }
+
+        if (family) {
+            queryObject.family = { $regex: family, $options: 'i' };
+        }
+
+        if (scientificName) {
+            queryObject.scientificName = { $regex: family, $options: 'i' };
+        }
+
+        if (numeric) {
+            const options = {
+                '>=': '$gte',
+                '<=': '$lte',
+                '>': '$gt',
+                '<': '$lt'
+            }
+            const numericFilters = Array.isArray(numeric) ? numeric : [numeric];
+            numericFilters.forEach(nf => {
+                const match = nf.match(/>=|<=|>|</);
+                if(match) {
+                    const filterParams = nf.split(match[0]);
+                    const queryFields = {};
+                    queryFields[options[match[0]]] = filterParams[1];
+
+                    if (!queryObject[filterParams[0]]) {
+                        queryObject[filterParams[0]] = {};
+                    }
+                    
+                    Object.assign(queryObject[filterParams[0]], queryFields);
+                }
+            })
         }
 
         const products = Product.find(queryObject);
