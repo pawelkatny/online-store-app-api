@@ -2,6 +2,7 @@ const { default: mongoose } = require('mongoose');
 const { Customer } = require('../models/user');
 const Product = require('../models/product');
 const Order = require('../models/order');
+const OrderService = require('../services/order');
 const ReturnService = require('../services/return');
 
 class CustomerService {
@@ -230,11 +231,11 @@ class CustomerService {
     }
 
     static async showOrdersHistory(customerId) {
-        return Order.find({ customer: customerId }).sort({ createdAt: 'desc' });
+        return OrderService.getOrders({ customer: customerId }).sort({ createdAt: 'desc' });
     }
 
     static async showOrder(customerId, orderId) {
-        return Order.findOne({ _id: orderId, customer: customerId });
+        return OrderService.getOrder({ _id: orderId, customer: customerId });
     }
 
     static async showReturnsHistory(customerId) {
