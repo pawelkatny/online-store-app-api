@@ -43,8 +43,12 @@ class OrderService {
         return Order.find(params);
     }
 
-    static async getOrder(orderId) {
+    static async getOrderById(orderId) {
         return Order.findById(orderId);
+    }
+
+    static async getOrder(params) {
+        return Order.findOne(params);
     }
 }
 
