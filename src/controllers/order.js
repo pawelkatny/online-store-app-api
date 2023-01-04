@@ -9,8 +9,7 @@ const getOrders = async (req, res) => {
         throw new CustomError('Unauthorized', StatusCodes.UNAUTHORIZED);
     }
     const { query } = req;
-    const queryObject = {};
-    const orders = await OrderService.getOrders(queryObject);
+    const orders = await OrderService.getOrders(query);
 
     res.status(StatusCodes.OK).json({ orders });
 }

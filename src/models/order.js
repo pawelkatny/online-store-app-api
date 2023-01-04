@@ -6,9 +6,29 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
     customer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Customer',
-        required: true
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'Customer',
+        },
+        name: {
+            first: {
+                type: String,
+                maxlength: 30
+            },
+            last: {
+                type: String,
+                maxlength: 30
+            }
+        },
+        email: {
+            type: String,
+            match: [
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                'Please provide a valid email address.',
+            ],
+            maxlength: 50
+        }
     },
     status: {
         type: String,
