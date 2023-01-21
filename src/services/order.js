@@ -2,7 +2,7 @@ const Order = require("../models/order");
 const Product = require("../models/product");
 
 class OrderService {
-  static async createOrder(customerId, orderData) {
+  static async createOrder(userData, orderData) {
     const { delivery, address, products } = orderData;
     const today = new Date().toDateString("default", {
       month: "short",
@@ -36,7 +36,7 @@ class OrderService {
     const newOrder = {
       number: orderNumber,
       customer: {
-        id: customerId,
+        ...userData,
       },
       status: "Processing",
       delivery: delivery,
