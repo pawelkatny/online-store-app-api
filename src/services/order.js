@@ -57,15 +57,21 @@ class OrderService {
     }
 
     if (email) {
-      queryObject["customer.email"] = email;
+      queryObject["customer.email"] = { $regex: email, $options: "i" };
     }
 
     if (firstName) {
-      queryObject["customer.name.firstName"] = firstName;
+      queryObject["customer.name.firstName"] = {
+        $regex: firstName,
+        $options: "i",
+      };
     }
 
     if (lastName) {
-      queryObject["customer.name.lastName"] = lastName;
+      queryObject["customer.name.lastName"] = {
+        $regex: lastName,
+        $options: "i",
+      };
     }
 
     if (numeric) {
@@ -92,21 +98,7 @@ class OrderService {
       });
     }
 
-    const orders = Order.find(queryObject).populate([
-      {
-        path: "customer",
-        select: {
-          name: 1,
-          email: 1,
-        },
-      },
-      {
-        path: "products.product",
-        select: {
-          name: 1,
-        },
-      },
-    ]);
+    const orders = Order.find(queryObject);
 
     if (sort) {
       const [option, type] = sort.split("#");
