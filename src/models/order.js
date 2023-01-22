@@ -104,6 +104,14 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
+orderSchema.pre("save", async function () {
+  const orderTotal = this.products
+    .filter((p) => p.deleted != true)
+    .reduce((a, b) => a + b.total, 0);
+
+  this.total = orderTotal;
+});
+
 const Order = mongoose.model("Order", orderSchema);
 
 module.exports = Order;
