@@ -91,6 +91,10 @@ const orderSchema = new mongoose.Schema(
         quantity: Number,
         price: Number,
         total: Number,
+        deleted: {
+          type: Boolean,
+          default: false,
+        },
       },
     ],
     total: Number,
