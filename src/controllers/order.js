@@ -55,8 +55,31 @@ const createOrder = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ order });
 };
 
+const updateOrder = async (req, res) => {
+  const currentUser = req.user;
+
+  if (!currentUser.hasPermission("edit-order")) {
+    throw new CustomError("Unauthorized", StatusCodes.UNAUTHORIZED);
+  }
+
+  const { orderId } = req.params;
+  const orderData = { ...req.body };
+
+  const order = await OrderService.updateOrder(orderId, orderData);
+
+  if (!order) {
+    throw new CustomError(
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
+  }
+
+  res.status(StatusCodes.OK).json({ order });
+};
+
 module.exports = {
   getOrders,
   getOrder,
   createOrder,
+  updateOrder,
 };
