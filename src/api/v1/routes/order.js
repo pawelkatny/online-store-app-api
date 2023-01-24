@@ -7,6 +7,6 @@ router.use(isAuthenticated);
 
 router.route("/").get(orderCtr.getOrders).post(orderCtr.createOrder);
 
-router.route("/:orderId").get(orderCtr.getOrder);
+router.route("/:orderId").get(orderCtr.getOrder).patch(orderCtr.updateOrder);
 
 module.exports = router;

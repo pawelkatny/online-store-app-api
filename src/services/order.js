@@ -31,8 +31,6 @@ class OrderService {
       })
     );
 
-    const orderTotal = updatedProducts.reduce((a, b) => a + b.total, 0);
-
     const newOrder = {
       number: orderNumber,
       customer: {
@@ -46,6 +44,10 @@ class OrderService {
     };
 
     return Order.create(newOrder);
+  }
+
+  static async updateOrder(id, orderData) {
+    return Order.findByIdAndUpdate(id, { ...orderData }, { new: true });
   }
 
   static async getOrders(query) {
