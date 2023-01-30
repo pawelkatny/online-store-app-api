@@ -1,9 +1,14 @@
 const Order = require("../models/order");
 const Product = require("../models/product");
+const MailerService = require("./mailer");
 
 class OrderService {
   static async createOrder(userData, orderData) {
     const { delivery, address, products } = orderData;
+    const status = {
+      success: false,
+      code: StatusCodes.INTERNAL_SERVER_ERROR,
+    };
     const today = new Date().toDateString("default", {
       month: "short",
       year: "long",
@@ -31,7 +36,7 @@ class OrderService {
       })
     );
 
-    const newOrder = {
+    const orderData = {
       number: orderNumber,
       customer: {
         ...userData,
@@ -43,7 +48,34 @@ class OrderService {
       total: orderTotal,
     };
 
-    return Order.create(newOrder);
+    const order = await Order.create(orderData);
+
+    if (order) {
+      const mailer = new MailerService();
+      await mailer.createTransporter();
+      const emailOptions = {
+        header: {
+          to: email,
+          subject: "Order confirmation",
+        },
+        template: "order-confirmation",
+        context: {
+          companyName: "TESTING PRODUCT",
+          name: orderData.customer.name.first,
+          products: orderData.products,
+          orderTotal: orderData.total,
+          shippingInfo: orderData.delivery,
+        },
+      };
+      const emailStatus = await mailer.sendEmail(emailOptions);
+
+      if (emailStatus.messageId) {
+        status.success = true;
+        status.code = StatusCodes.CREATED;
+      }
+    }
+
+    return status;
   }
 
   static async updateOrder(id, orderData) {
