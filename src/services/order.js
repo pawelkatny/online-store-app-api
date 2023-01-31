@@ -5,10 +5,6 @@ const MailerService = require("./mailer");
 class OrderService {
   static async createOrder(userData, orderData) {
     const { delivery, address, products } = orderData;
-    const status = {
-      success: false,
-      code: StatusCodes.INTERNAL_SERVER_ERROR,
-    };
     const today = new Date().toDateString("default", {
       month: "short",
       year: "long",
@@ -17,11 +13,11 @@ class OrderService {
     const currentYear = today.split(" ")[3];
     const lastCurrentMonthOrder = await Order.findOne({
       number: { $regex: `/${currentMonth}/` },
-    });
+    }).sort({ createdAt: -1 });
     let index = 1;
     if (lastCurrentMonthOrder) {
-      const lastOrderNumber = lastCurrentMonthOrder.name;
-      const lastIndex = lastOrderNumber.split(`/${currentMonth}`)[0];
+      const lastOrderNumber = lastCurrentMonthOrder.number;
+      const lastIndex = +lastOrderNumber.split(`/${currentMonth}`)[0];
       index = lastIndex + 1;
     }
     const orderNumber = `${index}/${currentMonth}/${currentYear}`;
@@ -29,14 +25,21 @@ class OrderService {
     const updatedProducts = await Promise.all(
       products.map(async (p) => {
         const productId = p.product;
-        const product = await Product.findById(productId, { price: 1, _id: 0 });
+        const product = await Product.findById(productId, {
+          price: 1,
+          name: 1,
+          _id: 0,
+        });
+        p.name = product.name;
         p.price = product.price;
         p.total = p.quantity * product.price;
         return p;
       })
     );
 
-    const orderData = {
+    const orderTotal = updatedProducts.reduce((a, b) => a + b.total, 0);
+
+    const newOrderData = {
       number: orderNumber,
       customer: {
         ...userData,
@@ -48,34 +51,30 @@ class OrderService {
       total: orderTotal,
     };
 
-    const order = await Order.create(orderData);
+    const order = await Order.create(newOrderData);
 
     if (order) {
       const mailer = new MailerService();
       await mailer.createTransporter();
       const emailOptions = {
         header: {
-          to: email,
+          to: userData.email,
           subject: "Order confirmation",
         },
         template: "order-confirmation",
         context: {
           companyName: "TESTING PRODUCT",
-          name: orderData.customer.name.first,
-          products: orderData.products,
-          orderTotal: orderData.total,
-          shippingInfo: orderData.delivery,
+          name: newOrderData.customer.name.first,
+          products: newOrderData.products,
+          orderTotal: newOrderData.total,
+          shippingInfo: newOrderData.delivery,
         },
       };
-      const emailStatus = await mailer.sendEmail(emailOptions);
 
-      if (emailStatus.messageId) {
-        status.success = true;
-        status.code = StatusCodes.CREATED;
-      }
+      await mailer.sendEmail(emailOptions);
     }
 
-    return status;
+    return order;
   }
 
   static async updateOrder(id, orderData) {
