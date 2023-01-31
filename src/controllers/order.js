@@ -1,5 +1,6 @@
 const CustomError = require("../error/customError");
 const OrderService = require("../services/order");
+const UserService = require("../services/user");
 const CustomerService = require("../services/customer");
 const { StatusCodes } = require("http-status-codes");
 
@@ -30,11 +31,24 @@ const getOrder = async (req, res) => {
 
 const createOrder = async (req, res) => {
   const currentUser = req.user;
-  const { delivery, address, products, name, email, id } = req.body;
-  let userData = { name, email, id };
+  const { delivery, address, products, customerId } = req.body;
+  let userData;
+
+  if (customerId) {
+    const user = await UserService.getUserById(customerId);
+    userData = {
+      name: user.name,
+      email: user.email,
+      id: user._id,
+    };
+  }
 
   if (currentUser.hasRole("customer")) {
-    userData = { ...currentUser };
+    userData = {
+      name: currentUser.name,
+      email: currentUser.email,
+      id: currentUser.id,
+    };
   }
 
   const order = await OrderService.createOrder(userData, {
@@ -50,7 +64,9 @@ const createOrder = async (req, res) => {
     );
   }
 
-  await CustomerService.clearCart(currentUser.id);
+  if (currentUser.hasRole("customer")) {
+    await CustomerService.clearCart(currentUser.id);
+  }
 
   res.status(StatusCodes.CREATED).json({ order });
 };
