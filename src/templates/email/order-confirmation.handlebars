@@ -337,7 +337,7 @@
     </style>
   </head>
   <body>
-    <span class="preheader">Use this link to reset your password. The link is only valid for 1 hour.</span>
+    <span class="preheader">Order confirmation</span>
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
       <tr>
         <td>&nbsp;</td>
@@ -363,12 +363,15 @@
                         <p>Thanks so much for your order! I hope you enjoy your new purchase.</p>
                         <p>Please find summary below. </p>
                         <table>
-                          <tbody>
+                          <caption>ORDER {{orderNumber}}</caption>
+                          <thead>
                             <tr>
-                                <th>Product name</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
+                              <th>Product name</th>
+                              <th>Quantity</th>
+                              <th>Total price</th>
                             </tr>
+                          </thead>
+                          <tbody>
                             {{#each products}}
                                 <tr>
                                     <td>{{this.name}}</td>
@@ -380,16 +383,14 @@
                           <tfoot>
                             <tr>
                                 <td>Total</td>
-                                <td>{{orderTotal}}</td>
+                                <td colspan="2">{{orderTotal}}</td>
                             </tr>
                             <tr>
                                 <td>Shipping</td>
-                                <td>{{shippingInfo}}</td>
+                                <td colspan="2">{{shippingInfo}}</td>
                             </tr>
                           </tfoot>
                         </table>
-                        <!-- <p>This is a really simple email template. Its sole purpose is to get the recipient to click the button with no distractions.</p>
-                        <p>Good luck! Hope it works.</p> -->
                       </td>
                     </tr>
                   </table>
@@ -411,7 +412,6 @@
               </table>
             </div>
             <!-- END FOOTER -->
-
           </div>
         </td>
         <td>&nbsp;</td>

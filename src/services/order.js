@@ -65,6 +65,7 @@ class OrderService {
         context: {
           companyName: "TESTING PRODUCT",
           name: newOrderData.customer.name.first,
+          orderNumber: newOrderData.number,
           products: newOrderData.products,
           orderTotal: newOrderData.total,
           shippingInfo: newOrderData.delivery,
