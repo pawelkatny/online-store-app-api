@@ -108,8 +108,22 @@ orderSchema.pre("save", async function () {
   const orderTotal = this.products
     .filter((p) => p.deleted != true)
     .reduce((a, b) => a + b.total, 0);
-
   this.total = orderTotal;
+});
+
+orderSchema.pre("findOneAndUpdate", async function () {
+  const { products } = this._update;
+  if (products) {
+    products.forEach((p) => {
+      p.total = p.price * p.quantity;
+    });
+    const orderTotal = products
+      .filter((p) => p.deleted != true)
+      .reduce((a, b) => a + b.total, 0);
+
+    this._update.products = products;
+    this._update.total = orderTotal;
+  }
 });
 
 const Order = mongoose.model("Order", orderSchema);
