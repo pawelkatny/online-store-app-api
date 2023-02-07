@@ -144,8 +144,83 @@ class ReturnService {
     return returnCreationStatus;
   }
 
-  static async getReturns(params, select = {}, options = {}) {
-    return Return.find(params, select, options);
+  static async getReturns(query) {
+    const {
+      number,
+      email,
+      firstName,
+      lastName,
+      reason,
+      status,
+      sort,
+      numeric,
+    } = query;
+    const queryObject = {};
+
+    if (number) {
+      queryObject.number = { $regex: number, $options: "i" };
+    }
+
+    if (email) {
+      queryObject["customer.email"] = { $regex: email, $options: "i" };
+    }
+
+    if (firstName) {
+      queryObject["customer.name.firstName"] = {
+        $regex: firstName,
+        $options: "i",
+      };
+    }
+
+    if (lastName) {
+      queryObject["customer.name.lastName"] = {
+        $regex: lastName,
+        $options: "i",
+      };
+    }
+
+    if (reason) {
+      queryObject.reason = { $regex: reason, $options: "i" };
+    }
+
+    if (status) {
+      queryObject.status = { $regex: status, $options: "i" };
+    }
+
+    if (numeric) {
+      const options = {
+        ">=": "$gte",
+        "<=": "$lte",
+        ">": "$gt",
+        "<": "$lt",
+      };
+      const numericFilters = Array.isArray(numeric) ? numeric : [numeric];
+      numericFilters.forEach((nf) => {
+        const match = nf.match(/>=|<=|>|</);
+        if (match) {
+          const filterParams = nf.split(match[0]);
+          const queryFields = {};
+          queryFields[options[match[0]]] = filterParams[1];
+
+          if (!queryObject[filterParams[0]]) {
+            queryObject[filterParams[0]] = {};
+          }
+
+          Object.assign(queryObject[filterParams[0]], queryFields);
+        }
+      });
+    }
+
+    const returns = Return.find(queryObject);
+
+    if (sort) {
+      const [option, type] = sort.split("#");
+      const sortObject = {};
+      sortObject[option] = type;
+      returns.sort(sortObject);
+    }
+
+    return returns;
   }
 
   static async getReturn(returnId) {
