@@ -8,15 +8,14 @@ const getReturns = async (req, res) => {
     throw new CustomError("Unauthorized", StatusCodes.UNAUTHORIZED);
   }
   const { query } = req;
-  const queryObject = {};
-  const returns = await ReturnService.getReturns(queryObject);
+  const returns = await ReturnService.getReturns(query);
 
   res.status(StatusCodes.OK).json({ returns });
 };
 
 const getReturn = async (req, res) => {
   const currentUser = req.user;
-  console.log(currentUser);
+
   if (!currentUser.hasPermission("view-return")) {
     throw new CustomError("Unauthorized", StatusCodes.UNAUTHORIZED);
   }
