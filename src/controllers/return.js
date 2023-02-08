@@ -66,8 +66,23 @@ const createReturn = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ newReturn });
 };
 
+const updateReturn = async (req, res) => {
+  const currentUser = req.user;
+  const { returnId } = req.params;
+  const { status } = req.body;
+
+  if (!currentUser.hasPermission("edit-return")) {
+    throw new CustomError("Unauthorized", StatusCodes.UNAUTHORIZED);
+  }
+
+  const updatedReturn = await ReturnService.updateReturn(returnId, { status });
+
+  res.status(StatusCodes.OK).json({ updatedReturn });
+};
+
 module.exports = {
   getReturn,
   getReturns,
   createReturn,
+  updateReturn,
 };

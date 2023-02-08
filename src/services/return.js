@@ -223,6 +223,10 @@ class ReturnService {
     return returns;
   }
 
+  static async updateReturn(id, returnData) {
+    return Return.findByIdAndUpdate(id, { ...returnData }, { new: true });
+  }
+
   static async getReturn(returnId) {
     return Return.findById(returnId);
   }
