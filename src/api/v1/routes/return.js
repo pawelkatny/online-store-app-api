@@ -1,15 +1,15 @@
-const { Router } = require('express');
+const { Router } = require("express");
 const router = Router();
-const returnCtr = require('../../../controllers/return');
-const { isAuthenticated } = require('../../../middleware/auth');
+const returnCtr = require("../../../controllers/return");
+const { isAuthenticated } = require("../../../middleware/auth");
 
 router.use(isAuthenticated);
 
-router.route('/')
-    .get(returnCtr.getReturns)
-    .post(returnCtr.createReturn);
+router.route("/").get(returnCtr.getReturns).post(returnCtr.createReturn);
 
-router.route('/:returnId')
-    .get(returnCtr.getReturn);
+router
+  .route("/:returnId")
+  .get(returnCtr.getReturn)
+  .patch(returnCtr.updateReturn);
 
 module.exports = router;
