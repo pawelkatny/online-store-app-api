@@ -14,13 +14,15 @@ class ReturnService {
       throw new CustomError("User not found", StatusCodes.NOT_FOUND);
     }
 
-    //get order data
     const order = await Order.findById(orderId, { number: 1, products: 1 });
-    //get returns connected to order and map to products
-    const returns = await Return.find({ "order.id": orderId })
+
+    const returns = await Return.find({
+      "order.id": orderId,
+      status: { $nin: ["Cancelled", "Failed"] },
+    })
       .populate("order")
       .sort({ createdAt: "desc" });
-    //check if items were already returned
+
     let returnedProducts = [];
 
     if (returns.length == 0) {
@@ -93,13 +95,11 @@ class ReturnService {
       (rp) => rp.canBeReturned != true
     );
 
-    //create default object to return from function
     const returnCreationStatus = {
       success: false,
       return: null,
     };
 
-    //create return number
     let returnNumber = `R/${order.number}/1`;
     if (returns.length > 0) {
       const lastReturnId = returns[0].number.split("/")[4];
