@@ -45,7 +45,7 @@ class AuthService {
         },
       };
       const emailStatus = await mailer.sendEmail(emailOptions);
-      console.log({ emailStatus });
+
       if (emailStatus.messageId) {
         status.success = true;
         status.code = StatusCodes.CREATED;
