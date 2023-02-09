@@ -1,6 +1,5 @@
 const Order = require("../models/order");
 const Product = require("../models/product");
-const MailerService = require("./mailer");
 
 class OrderService {
   static async createOrder(userData, orderData) {
@@ -52,28 +51,6 @@ class OrderService {
     };
 
     const order = await Order.create(newOrderData);
-
-    if (order) {
-      const mailer = new MailerService();
-      await mailer.createTransporter();
-      const emailOptions = {
-        header: {
-          to: userData.email,
-          subject: "Order confirmation",
-        },
-        template: "order-confirmation",
-        context: {
-          companyName: "TESTING PRODUCT",
-          name: newOrderData.customer.name.first,
-          orderNumber: newOrderData.number,
-          products: newOrderData.products,
-          orderTotal: newOrderData.total,
-          shippingInfo: newOrderData.delivery,
-        },
-      };
-
-      await mailer.sendEmail(emailOptions);
-    }
 
     return order;
   }

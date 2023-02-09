@@ -2,7 +2,6 @@ const { Customer, User } = require("../models/user");
 const CustomError = require("../error/customError");
 const { StatusCodes } = require("http-status-codes");
 const Role = require("../models/role");
-const MailerService = require("./mailer");
 const jwt = require("async-jsonwebtoken");
 const { jwt_secret } = require("../config");
 
@@ -101,27 +100,10 @@ class AuthService {
       await user.createResetPwdToken();
       await user.save();
 
-      const mailer = new MailerService();
-      const emailOptions = {
-        header: {
-          to: email,
-          subject: "Password reset",
-        },
-        template: "password-reset",
-        context: {
-          companyName: "TESTING PRODUCT",
-          name: user.name.first,
-          resetPwdUri: user.passwordReset.token,
-        },
-      };
-      const emailStatus = await mailer.sendEmail(emailOptions);
-
-      if (emailStatus.messageId) {
-        status.success = true;
-        status.msg =
-          "Your password was reseted. Pleas check your email and follow further instructions.";
-        status.code = StatusCodes.OK;
-      }
+      status.success = true;
+      status.msg =
+        "Your password was reseted. Pleas check your email and follow further instructions.";
+      status.code = StatusCodes.OK;
     }
 
     return status;
