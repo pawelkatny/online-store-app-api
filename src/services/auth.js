@@ -18,40 +18,19 @@ class AuthService {
     const status = {
       success: false,
       code: StatusCodes.INTERNAL_SERVER_ERROR,
+      token: null,
     };
 
     const role = await Role.findOne({ name: "customer" });
 
     user = await Customer.create({ email, password, name, role: role._id });
-    if (user) {
-      await user.createActivationToken();
-      await user.save();
-    }
+    await user.createActivationToken();
+    await user.save();
 
-    if (user.accountActivation.token) {
-      const mailer = new MailerService();
-      await mailer.createTransporter();
-      const emailOptions = {
-        header: {
-          to: email,
-          subject: "Account activation",
-        },
-        template: "account-activation",
-        context: {
-          companyName: "TESTING PRODUCT",
-          name: user.name.first,
-          activateLink: user.accountActivation.token,
-        },
-      };
-      const emailStatus = await mailer.sendEmail(emailOptions);
-
-      if (emailStatus.messageId) {
-        status.success = true;
-        status.code = StatusCodes.CREATED;
-      }
-    }
-
-    return status;
+    return {
+      code: StatusCodes.CREATED,
+      token: user.accountActivation.token,
+    };
   }
 
   static async login(loginData) {
@@ -88,25 +67,13 @@ class AuthService {
     return decoded;
   }
 
-  static async sendResetPasswordEmail(email) {
+  static async createResetPwdToken(email) {
     const user = await User.findOne({ email: email });
-    const status = {
-      success: false,
-      msg: "User does not exist.",
-      code: StatusCodes.NOT_FOUND,
-    };
 
-    if (user) {
-      await user.createResetPwdToken();
-      await user.save();
+    await user.createResetPwdToken();
+    await user.save();
 
-      status.success = true;
-      status.msg =
-        "Your password was reseted. Pleas check your email and follow further instructions.";
-      status.code = StatusCodes.OK;
-    }
-
-    return status;
+    return { token: user.passwordReset.token };
   }
 
   static async resetPassword(userId, token, password) {
@@ -119,11 +86,6 @@ class AuthService {
       "passwordReset.token": token,
     });
 
-    if (!user) {
-      status.msg = "User does not exist.";
-      status.code = StatusCodes.NOT_FOUND;
-    }
-
     if (user && (new Date() - user.passwordReset.createdAt) / 1000 > 3600) {
       status.msg = "Password reset token expired. Please try again.";
       status.code = StatusCodes.NOT_FOUND;
@@ -133,8 +95,6 @@ class AuthService {
       user.password = password;
       await user.save();
       status.success = true;
-      status.msg =
-        "Password successfully reseted. Please login using new password.";
       status.code = StatusCodes.OK;
     }
 
@@ -152,11 +112,6 @@ class AuthService {
       "accountActivation.token": token,
     });
 
-    if (!user) {
-      status.msg = "User does not exist.";
-      status.code = StatusCodes.NOT_FOUND;
-    }
-
     const currentDate = new Date();
     const expireAt = currentDate.setFullYear(currentDate.getFullYear() + 100);
     user.expireAt = expireAt;
@@ -164,7 +119,6 @@ class AuthService {
     await user.save();
 
     status.success = true;
-    status.msg = "Your account has been activated. You can now log in.";
     status.code = StatusCodes.OK;
 
     return status;
