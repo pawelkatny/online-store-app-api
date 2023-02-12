@@ -1,6 +1,7 @@
 const CustomError = require("../error/customError");
 const ReturnService = require("../services/return");
 const { StatusCodes } = require("http-status-codes");
+const { success } = require("../helpers/responseApi");
 
 const getReturns = async (req, res) => {
   const currentUser = req.user;
@@ -10,7 +11,7 @@ const getReturns = async (req, res) => {
   const { query } = req;
   const returns = await ReturnService.getReturns(query);
 
-  res.status(StatusCodes.OK).json({ returns });
+  res.status(StatusCodes.OK).json(success(StatusCodes.OK, { returns }));
 };
 
 const getReturn = async (req, res) => {
@@ -26,7 +27,7 @@ const getReturn = async (req, res) => {
     throw new CustomError("Not found", StatusCodes.NOT_FOUND);
   }
 
-  res.status(StatusCodes.OK).json({ returnDoc });
+  res.status(StatusCodes.OK).json(success(StatusCodes.OK, { returnDoc }));
 };
 
 const createReturn = async (req, res) => {
@@ -63,7 +64,9 @@ const createReturn = async (req, res) => {
     );
   }
 
-  res.status(StatusCodes.CREATED).json({ newReturn });
+  res
+    .status(StatusCodes.CREATED)
+    .json(success(StatusCodes.CREATED, { newReturn }));
 };
 
 const updateReturn = async (req, res) => {
@@ -77,7 +80,7 @@ const updateReturn = async (req, res) => {
 
   const updatedReturn = await ReturnService.updateReturn(returnId, { status });
 
-  res.status(StatusCodes.OK).json({ updatedReturn });
+  res.status(StatusCodes.OK).json(success(StatusCodes.OK, { updatedReturn }));
 };
 
 module.exports = {
