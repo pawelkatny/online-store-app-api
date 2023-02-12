@@ -28,10 +28,10 @@ const requestPasswordReset = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-  const { pwdResetToken, userId, password } = req.body;
-  const { code: statusCode, token } = await AuthService.resetPassword(
+  const { token, userId, password } = req.body;
+  const { code: statusCode } = await AuthService.resetPassword(
     userId,
-    pwdResetToken,
+    token,
     password
   );
 
