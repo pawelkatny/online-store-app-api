@@ -3,6 +3,7 @@ const OrderService = require("../services/order");
 const UserService = require("../services/user");
 const CustomerService = require("../services/customer");
 const { StatusCodes } = require("http-status-codes");
+const { success } = require("../helpers/responseApi");
 
 const getOrders = async (req, res) => {
   const currentUser = req.user;
@@ -12,7 +13,7 @@ const getOrders = async (req, res) => {
   const { query } = req;
   const orders = await OrderService.getOrders(query);
 
-  res.status(StatusCodes.OK).json({ orders });
+  res.status(StatusCodes.OK).json(success(StatusCodes.OK, { orders }));
 };
 
 const getOrder = async (req, res) => {
@@ -26,7 +27,7 @@ const getOrder = async (req, res) => {
     throw new CustomError("Not found", StatusCodes.NOT_FOUND);
   }
 
-  res.status(StatusCodes.OK).json({ order });
+  res.status(StatusCodes.OK).json(success(StatusCodes.OK, { order }));
 };
 
 const createOrder = async (req, res) => {
@@ -68,7 +69,7 @@ const createOrder = async (req, res) => {
     await CustomerService.clearCart(currentUser.id);
   }
 
-  res.status(StatusCodes.CREATED).json({ order });
+  res.status(StatusCodes.CREATED).json(success(StatusCodes.CREATED, { order }));
 };
 
 const updateOrder = async (req, res) => {
@@ -90,7 +91,7 @@ const updateOrder = async (req, res) => {
     );
   }
 
-  res.status(StatusCodes.OK).json({ order });
+  res.status(StatusCodes.OK).json(success(StatusCodes.OK, { order }));
 };
 
 module.exports = {
