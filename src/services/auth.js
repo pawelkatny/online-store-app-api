@@ -93,6 +93,7 @@ class AuthService {
 
     if (user && (new Date() - user.passwordReset.createdAt) / 1000 <= 3600) {
       user.password = password;
+      await user.deleteResetPwdToken();
       await user.save();
       status.success = true;
       status.code = StatusCodes.OK;
