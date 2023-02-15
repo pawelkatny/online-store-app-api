@@ -91,6 +91,10 @@ userSchema.methods.createResetPwdToken = async function () {
   };
 };
 
+userSchema.methods.deleteResetPwdToken = async function () {
+  this.passwordReset.token = null;
+};
+
 const User = mongoose.model("User", userSchema);
 
 const customerSchema = new mongoose.Schema(

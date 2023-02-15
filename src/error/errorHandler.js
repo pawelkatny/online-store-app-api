@@ -2,9 +2,13 @@ const logger = require("../services/logger");
 const CustomError = require("../error/customError");
 const ValidatorError = require("mongoose").Error;
 const { getReasonPhrase } = require("http-status-codes");
+const { error, validation } = require("../helpers/responseApi");
 
 const errorHandler = (err, req, res, next) => {
-  let statusCode = 500;
+  let message,
+    response,
+    errors,
+    statusCode = 500;
 
   logger.error(err.message);
   console.log(err.errors);
@@ -12,16 +16,18 @@ const errorHandler = (err, req, res, next) => {
     statusCode = err.statusCode;
   }
 
-  let message = [getReasonPhrase(statusCode)];
+  message = getReasonPhrase(statusCode);
+  response = error(statusCode, message);
 
   if (err instanceof ValidatorError) {
     statusCode = 422;
-    message = Object.keys(err.errors).map((key) => {
+    errors = Object.keys(err.errors).map((key) => {
       return err.errors[key].properties.message;
     });
+    response = validation(statusCode, errors);
   }
 
-  res.status(statusCode).send({ message });
+  res.status(statusCode).send(response);
 };
 
 module.exports = errorHandler;
