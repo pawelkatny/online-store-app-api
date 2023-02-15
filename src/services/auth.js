@@ -124,6 +124,17 @@ class AuthService {
 
     return status;
   }
+
+  static async deleteAccount(userId) {
+    const user = User.findById(userId);
+
+    if (!user) {
+      throw new CustomError("Unathorized", StatusCodes.UNAUTHORIZED);
+    }
+    const currentDate = new Date();
+    user.expireAt = currentDate.setMinutes(currentDate.getMinutes + 5);
+    return user.save();
+  }
 }
 
 module.exports = AuthService;
