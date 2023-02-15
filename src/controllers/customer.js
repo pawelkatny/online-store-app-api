@@ -281,6 +281,20 @@ const showReturnsHistory = async (req, res) => {
   res.status(StatusCodes.OK).json(success(StatusCodes.OK, { returns }));
 };
 
+const deleteAccount = async (req, res) => {
+  const currentUser = req.user;
+  const user = await CustomerService.delete(currentUser.id);
+
+  if (!user) {
+    throw new CustomError(
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
+  }
+
+  res.status(StatusCodes.OK).send();
+};
+
 module.exports = {
   getSummary,
   getInfo,
@@ -303,4 +317,5 @@ module.exports = {
   showOrdersHistory,
   showReturn,
   showReturnsHistory,
+  deleteAccount,
 };
