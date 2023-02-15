@@ -108,7 +108,6 @@ const getAddress = async (req, res) => {
   if (!addresses) {
     throw new CustomError("Not found", StatusCodes.NOT_FOUND);
   }
-
   res.status(StatusCodes.OK).json(success(StatusCodes.OK, { addresses }));
 };
 
@@ -157,7 +156,7 @@ const updateAddress = async (req, res) => {
   if (!address) {
     throw new CustomError(
       "Something went wrong",
-      StatusCodes.INTERNAL_SERVER_ERRORs
+      StatusCodes.INTERNAL_SERVER_ERROR
     );
   }
 
