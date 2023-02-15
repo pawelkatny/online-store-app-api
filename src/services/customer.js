@@ -266,6 +266,14 @@ class CustomerService {
   static async showReturn(customerId, returnId) {
     return ReturnService.getCustomerReturn(customerId, returnId);
   }
+
+  static async delete(userId) {
+    const user = Customer.findById(userId);
+
+    const currentDate = new Date();
+    user.expireAt = currentDate.setMinutes(currentDate.getMinutes + 5);
+    return user.save();
+  }
 }
 
 module.exports = CustomerService;
