@@ -9,9 +9,9 @@ const success = (statusCode, data = {}) => {
   };
 };
 
-const error = (statusCode) => {
+const error = (statusCode, message) => {
   return {
-    message: getReasonPhrase(statusCode),
+    message,
     statusCode,
     error: true,
   };
