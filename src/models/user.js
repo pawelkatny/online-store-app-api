@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "Please provide password."],
-      maxlength: 20,
+      maxlength: 255,
     },
 
     passwordReset: {

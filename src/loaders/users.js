@@ -19,7 +19,6 @@ class RolesLoader {
           });
         }
       } catch (error) {
-        console.log(error);
         logger.warn(`Error while creating user in DB: ${u.role}.`);
       }
     }

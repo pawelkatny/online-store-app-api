@@ -4,6 +4,7 @@ const { StatusCodes } = require("http-status-codes");
 const Role = require("../models/role");
 const jwt = require("async-jsonwebtoken");
 const { jwt_secret } = require("../config");
+const defaultUsers = require("../config/users");
 
 class AuthService {
   static async register(userData) {
@@ -68,7 +69,15 @@ class AuthService {
   }
 
   static async createResetPwdToken(email) {
+    if (defaultUsers.map((u) => u.email).includes(email)) {
+      throw new CustomError("Unauthorized", StatusCodes.UNAUTHORIZED);
+    }
+
     const user = await User.findOne({ email: email });
+
+    if (!user) {
+      throw new CustomError("Not found", StatusCodes.NOT_FOUND);
+    }
 
     await user.createResetPwdToken();
     await user.save();
@@ -85,6 +94,10 @@ class AuthService {
       _id: userId,
       "passwordReset.token": token,
     });
+
+    if (defaultUsers.map((u) => u.email).includes(user.email)) {
+      throw new CustomError("Unauthorized", StatusCodes.UNAUTHORIZED);
+    }
 
     if (user && (new Date() - user.passwordReset.createdAt) / 1000 > 3600) {
       status.msg = "Password reset token expired. Please try again.";
