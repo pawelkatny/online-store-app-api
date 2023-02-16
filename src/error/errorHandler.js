@@ -11,7 +11,6 @@ const errorHandler = (err, req, res, next) => {
     statusCode = 500;
 
   logger.error(err.message);
-  console.log(err.errors);
   if (err instanceof CustomError) {
     statusCode = err.statusCode;
   }
