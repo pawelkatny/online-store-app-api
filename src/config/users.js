@@ -5,8 +5,8 @@ const defaultUsers = [
     role: "admin",
     email: "admin@online-store.pl",
     name: {
-      firstName: "admin",
-      lastName: "admin",
+      first: "admin",
+      last: "admin",
     },
     password: generatePwd(),
   },
@@ -14,8 +14,8 @@ const defaultUsers = [
     role: "support",
     email: "support@online-store.pl",
     name: {
-      firstName: "support",
-      lastName: "support",
+      first: "support",
+      last: "support",
     },
     password: generatePwd(),
   },
