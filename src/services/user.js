@@ -65,14 +65,14 @@ class UserService {
     }
 
     if (firstName) {
-      queryObject.name.firstName = {
+      queryObject["name.first"] = {
         $regex: firstName,
         $options: "i",
       };
     }
 
     if (lastName) {
-      queryObject.name.lastName = {
+      queryObject["name.last"] = {
         $regex: lastName,
         $options: "i",
       };
