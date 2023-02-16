@@ -9,3 +9,5 @@ const generatePwd = () => {
   }
   return pwd;
 };
+
+module.exports = generatePwd;
