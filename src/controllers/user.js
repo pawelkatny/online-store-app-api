@@ -10,10 +10,8 @@ const getUsers = async (req, res) => {
     throw new CustomError("Unauthorized", StatusCodes.UNAUTHORIZED);
   }
   const { query } = req;
-  //build query object
-  const queryObject = {};
 
-  const users = await UserService.getUsers(queryObject);
+  const users = await UserService.getUsers(query);
 
   res.status(StatusCodes.OK).json(success(StatusCodes.OK, { users }));
 };
