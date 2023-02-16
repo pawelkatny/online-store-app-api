@@ -47,13 +47,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       maxlength: 20,
     },
-
-    lastLoginDate: Date,
-
-    failedLogins: {
-      count: Number,
-      lastDate: Date,
-    },
   },
   { timestamps: true }
 );
